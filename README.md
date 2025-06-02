@@ -1,4 +1,5 @@
 # HTML Chat Archive Converter
+Copyright (C)2025 Robin L. M. Cheung, MBA. All rights reserved.
 
 Convert your Anthropic (Claude) and OpenAI (ChatGPT) chat archives into beautiful HTML files with iOS-style chat bubbles, light/dark mode support, and excellent navigation features.
 
@@ -207,7 +208,7 @@ scripts/
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is proprietarily-licenced. Please contact the author for information.
 
 ## Acknowledgments
 
