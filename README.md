@@ -1,217 +1,177 @@
-# HTML Chat Archive Converter
-Copyright (C)2025 Robin L. M. Cheung, MBA. All rights reserved.
+# Chat HTML Generator
 
-Convert your Anthropic (Claude) and OpenAI (ChatGPT) chat archives into beautiful HTML files with iOS-style chat bubbles, light/dark mode support, and excellent navigation features.
+Transform your OpenAI or Anthropic chat exports into static, navigable HTML pages with ease.
 
-## Features
+---
 
-- **iOS-Style Chat Interface**: Beautiful chat bubbles with proper alignment (user messages on right, assistant on left)
-- **Light/Dark Mode**: Toggle between themes with persistent preferences
-- **Search & Filter**: Full-text search across all conversations with filtering by source and date
-- **Responsive Design**: Works perfectly on mobile and desktop devices
-- **Ready-to-Deploy**: Generates a complete zip package that can be uploaded to any web server
-- **Navigation**: Chronological organization with breadcrumb navigation and previous/next links
-- **Copy Functionality**: Easy copying of individual messages
-- **Statistics**: Overview of total conversations, messages, and date ranges
+## 🚀 Overview
 
-## Quick Start
+This repository provides a single‑script solution to:
 
-1. **Install Dependencies**
+1. **Scan** a folder of JSON chat exports (OpenAI or Anthropic).
+2. **Parse** each conversation into timestamped messages.
+3. **Render** one standalone HTML file per conversation, styled as chat bubbles.
+4. **Generate** a top‑level `index.html` that lists all conversations chronologically.
+
+Whether you want to archive your AI interactions, share them on a static site, or simply browse them offline, this tool makes it quick and customizable.
+
+---
+
+## 🔧 Features
+
+* **Universal Compatibility**: Works with OpenAI JSON exports (v1 mapping format) and can be extended to Anthropic exports by adjusting a single parser function.
+* **Automatic Timestamps**: Each message displays its creation date/time, and the filename itself is prefixed by the conversation’s creation timestamp.
+* **Chat‑Bubble Styling**: User and assistant messages are visually distinct. Easy-to‑customize CSS variables let you swap colors, fonts, and bubble shapes.
+* **Chronological Index**: An `index.html` is generated that links to each conversation file, sorted by date.
+* **Minimal Dependencies**: Pure Python (≥3.7) with only the standard library—no external packages required.
+
+---
+
+## 📥 Installation
+
+1. **Clone this repo**:
+
    ```bash
-   pip install -r requirements.txt
+   git clone https://github.com/yourusername/chat-html-generator.git
+   cd chat-html-generator
    ```
 
-2. **Prepare Your Data**
-   Place your JSON export files in the `data/raw/` directory:
-   - `claude_conversations.json` (or `anthropic_conversations.json`)
-   - `openai_conversations.json` (or `chatgpt_conversations.json`)
+2. **Ensure Python 3.7+ is installed**. Check with:
 
-3. **Run the Converter**
    ```bash
-   python scripts/convert_to_html.py
+   python3 --version
    ```
 
-4. **View Your Archive**
-   Open the generated `index.html` file in your browser or deploy the zip package to a web server.
+3. (Optional) Create a virtual environment:
 
-## Output Structure
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-The converter creates a timestamped folder with the following structure:
+4. **Make the script executable** (optional):
 
-```
-data/html/chat_export_YYYYMMDD_HHMMSS/
-├── index.html                    # Main navigation page
-├── assets/
-│   ├── style.css                 # iOS-style styling with themes
-│   ├── script.js                 # Search, filtering, theme toggle
-│   ├── favicon.svg               # Site icon
-│   ├── manifest.json             # Web app manifest
-│   └── robots.txt                # SEO configuration
-├── anthropic/
-│   ├── index.html                # Anthropic conversations index
-│   └── conversations/
-│       ├── conversation_1.html
-│       └── ...
-└── openai/
-    ├── index.html                # OpenAI conversations index
-    └── conversations/
-        ├── conversation_1.html
-        └── ...
-```
+   ```bash
+   chmod +x generate_chat_html.py
+   ```
 
-## How to Get Your Chat Exports
+That’s it—no other dependencies needed.
 
-### Anthropic (Claude)
-1. Go to [Claude Settings](https://claude.ai/settings)
-2. Navigate to "Data Export"
-3. Request your data export
-4. Download the JSON file when ready
-5. Rename to `claude_conversations.json` and place in `data/raw/`
+---
 
-### OpenAI (ChatGPT)
-1. Go to [ChatGPT Settings](https://chatgpt.com/settings)
-2. Navigate to "Data Controls" → "Export Data"
-3. Request your data export
-4. Download and extract the ZIP file
-5. Find `conversations.json` and rename to `openai_conversations.json`
-6. Place in `data/raw/`
+## 🏃 Usage
 
-## Usage Examples
+Run the script, pointing to your folder of JSON exports and an output folder where HTML will be written:
 
-### Basic Conversion
 ```bash
-python scripts/convert_to_html.py
+python3 generate_chat_html.py \
+  --input-folder /path/to/json_exports \
+  --output-folder /path/to/html_output
 ```
 
-### View Results
+* `--input-folder`: Directory containing one or more `.json` files (either OpenAI exports, a list of exports, or custom Anthropic exports).
+* `--output-folder`: Directory where the generated `.html` files (and `index.html`) will be placed. Will be created if it doesn’t exist.
+
+Example:
+
 ```bash
-# Open in default browser (macOS)
-open data/html/chat_export_*/index.html
-
-# Open in default browser (Linux)
-xdg-open data/html/chat_export_*/index.html
-
-# Open in default browser (Windows)
-start data/html/chat_export_*/index.html
+python3 generate_chat_html.py \
+  --input-folder ~/Downloads/openai_chats \
+  --output-folder ~/site/conversations
 ```
 
-### Deploy to Web Server
-```bash
-# Extract the generated zip file to your web server
-unzip data/html/chat_export_*.zip -d /path/to/webserver/
+Once it finishes, open `~/site/conversations/index.html` in your browser to see your sorted archive.
+
+### 🔍 Customizing the Appearance
+
+By default, the script inlines CSS variables at the top of each HTML. To tweak:
+
+1. **Open** `generate_chat_html.py` in your favorite editor.
+2. Look for the `USER_BACKGROUND`, `ASSISTANT_BACKGROUND`, and other style constants at the top:
+
+   ```python
+   USER_BG       = "#daf1da"     # user chat bubble background color
+   ASSISTANT_BG  = "#f1f1f1"     # assistant bubble background color
+   USER_COLOR    = "#000000"     # user text color
+   ASSIST_COLOR  = "#000000"     # assistant text color
+   FONT_FAMILY   = "Arial, sans-serif"
+   BODY_BG       = "#ffffff"
+   BORDER_RADIUS = "12px"
+   ```
+3. **Modify** any hex code, font, or radius value to match your brand or personal taste.
+4. (Advanced) Extract the entire `<style>…</style>` block into a separate `theme.css` file, then replace the inline CSS with a `<link rel="stylesheet" href="theme.css">` in the template.
+
+---
+
+## 🛠️ Extending for Anthropic or Other Formats
+
+If you have a different JSON structure (e.g., from Anthropic), update the `parse_anthropic_conv()` function:
+
+```python
+
+def parse_anthropic_conv(conv: dict) -> dict:
+    # Example: conv might be a list of messages:
+    #    [ { "sender": "human", "timestamp": …, "text": … }, … ]
+    if isinstance(conv, list):
+        messages = []
+        for m in conv:
+            role = "user" if m.get("sender") == "human" else "assistant"
+            ts = m.get("timestamp", 0)
+            content = m.get("text", "").strip()
+            if content:
+                messages.append({"role": role, "ts": ts, "content": content})
+        messages.sort(key=lambda msg: msg["ts"])
+        return {
+            "title": "Anthropic Conversation",
+            "create_ts": messages[0]["ts"] if messages else 0,
+            "messages": messages
+        }
+    # … add other parsing rules as needed …
+    return {"title": "(unparsed)", "create_ts": 0, "messages": []}
 ```
 
-## Features in Detail
+With that function producing the same shape as the OpenAI parser, the rendering logic remains identical.
 
-### iOS-Style Chat Interface
-- **User messages**: Blue bubbles aligned to the right
-- **Assistant messages**: Gray bubbles aligned to the left  
-- **System messages**: Centered with subtle styling
-- **Timestamps**: Displayed for each message
-- **Copy buttons**: Hover over messages to copy content
+---
 
-### Theme System
-- **Light mode**: Clean white background with dark text
-- **Dark mode**: Black background with light text
-- **Persistent preferences**: Theme choice saved in browser
-- **Smooth transitions**: Animated theme switching
+## 📂 Repository Structure
 
-### Search & Navigation
-- **Real-time search**: Filter conversations as you type
-- **Source filtering**: Show only OpenAI or Anthropic conversations
-- **Date sorting**: Sort by newest/oldest, title, or message count
-- **Breadcrumb navigation**: Easy navigation between pages
-- **Statistics overview**: Total conversations, messages, and date ranges
-
-### Mobile Support
-- **Responsive design**: Optimized for all screen sizes
-- **Touch-friendly**: Large tap targets and smooth scrolling
-- **Mobile search**: Optimized search experience on mobile devices
-
-## Technical Details
-
-### Architecture
-- **Modular design**: Separate parsers for each chat format
-- **Template-based**: Jinja2 templates for consistent HTML generation
-- **Asset management**: Automated copying and organization of CSS/JS/icons
-- **Error handling**: Graceful handling of malformed data
-
-### Browser Compatibility
-- **Modern browsers**: Chrome, Firefox, Safari, Edge (latest versions)
-- **JavaScript**: Vanilla JS for maximum compatibility
-- **CSS**: Modern CSS with fallbacks for older browsers
-- **No server required**: Pure client-side functionality
-
-### Performance
-- **Efficient parsing**: Handles thousands of conversations
-- **Lazy loading**: Optimized for large conversation lists
-- **Minimal dependencies**: Only requires Jinja2 for generation
-- **Fast search**: Client-side search with instant results
-
-## Troubleshooting
-
-### Common Issues
-
-**No input files found**
-- Ensure JSON files are in `data/raw/` directory
-- Check filename matches expected patterns
-- Verify file is valid JSON format
-
-**Import errors**
-- Run `pip install -r requirements.txt`
-- Ensure you're using Python 3.7+
-
-**Timezone comparison errors**
-- This is automatically handled in the latest version
-- Timestamps are normalized to be timezone-naive
-
-**Large file processing**
-- The converter handles thousands of conversations efficiently
-- For very large exports (>10k conversations), processing may take a few minutes
-
-### Getting Help
-
-If you encounter issues:
-1. Check the console output for specific error messages
-2. Verify your JSON files are valid and complete
-3. Ensure all dependencies are installed correctly
-4. Try with a smaller subset of data first
-
-## Development
-
-### Project Structure
 ```
-scripts/
-├── convert_to_html.py           # Main conversion script
-├── parsers/                     # Data parsing modules
-│   ├── base_parser.py          # Abstract base parser
-│   ├── anthropic_parser.py     # Anthropic format parser
-│   └── openai_parser.py        # OpenAI format parser
-├── generators/                  # HTML generation modules
-│   ├── html_generator.py       # Individual conversation pages
-│   ├── index_generator.py      # Navigation index pages
-│   └── asset_manager.py        # Static asset management
-├── templates/                   # Jinja2 HTML templates
-│   ├── conversation.html       # Individual conversation template
-│   └── index.html             # Index page template
-└── assets/                     # Static assets
-    ├── style.css              # Main stylesheet
-    └── script.js              # Main JavaScript
+chat-html-generator/
+├── generate_chat_html.py    # Core script that generates HTML
+├── example_openai_conversations.json  # Sample export for testing
+└── README.md                # <-- You’re here!
 ```
 
-### Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test with sample data
-5. Submit a pull request
+* **`generate_chat_html.py`**: Walks input folder, parses each JSON, renders HTML.
+* **`example_openai_conversations.json`**: A small sample export for smoke-testing.
 
-## License
+---
 
-This project is proprietarily-licenced. Please contact the author for information.
+## 🤝 Contributing
 
-## Acknowledgments
+1. **Fork** this repo and create a descriptive branch (e.g. `feature/anthropic-support`).
+2. **Commit** changes with clear messages.
+3. **Submit a Pull Request** against `main`. We’ll review and merge!
+4. Feel free to open issues if you:
 
-- Inspired by iOS Messages app design
-- Built with modern web standards
-- Designed for privacy and offline use
+   * Discover a bug.
+   * Need help with a custom use case.
+   * Have a styling or usability suggestion.
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+## 🙏 Acknowledgments
+
+* Inspired by [convert\_openai\_chats.py](#) and community feedback.
+* Built with ❤️ and pure Python.
+
+---
+
+*Happy archiving!* 🎉
