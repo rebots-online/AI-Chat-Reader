@@ -1,0 +1,178 @@
+[
+  {
+    "title": "Example OpenAI Conversation",
+    "create_time": 1716547200.123456,
+    "update_time": 1716547300.789012,
+    "mapping": {
+      "root-message-id": {
+        "id": "root-message-id",
+        "message": null,
+        "parent": null,
+        "children": ["system-message-id"]
+      },
+      "system-message-id": {
+        "id": "system-message-id",
+        "message": {
+          "id": "system-message-id",
+          "author": {"role": "system", "name": null, "metadata": {}},
+          "create_time": null,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": ["You are a helpful assistant."]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 0.0,
+          "metadata": {"is_visually_hidden_from_conversation": true},
+          "recipient": "all"
+        },
+        "parent": "root-message-id",
+        "children": ["user-message-id"]
+      },
+      "user-message-id": {
+        "id": "user-message-id",
+        "message": {
+          "id": "user-message-id",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1716547210.123456,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": ["Hello, can you help me understand how to use this converter?"]},
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "system-message-id",
+        "children": ["assistant-message-id"]
+      },
+      "assistant-message-id": {
+        "id": "assistant-message-id",
+        "message": {
+          "id": "assistant-message-id",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1716547220.123456,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": ["Of course! This converter helps you transform your OpenAI chat exports into readable Markdown format. To use it:\n\n1. Export your conversations from OpenAI\n2. Place the JSON file in the data/raw directory\n3. Run the script\n4. Find your converted file in data/processed\n\nLet me know if you have any questions!"]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "user-message-id",
+        "children": ["user-message-id-2"]
+      },
+      "user-message-id-2": {
+        "id": "user-message-id-2",
+        "message": {
+          "id": "user-message-id-2",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1716547230.123456,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": ["That's very helpful, thank you!"]},
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "assistant-message-id",
+        "children": ["assistant-message-id-2"]
+      },
+      "assistant-message-id-2": {
+        "id": "assistant-message-id-2",
+        "message": {
+          "id": "assistant-message-id-2",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1716547240.123456,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": ["You're welcome! If you have any other questions about the converter, feel free to ask. Happy converting!"]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "user-message-id-2",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "current_node": "assistant-message-id-2"
+  },
+  {
+    "title": "Example With Rich Content",
+    "create_time": 1716547300.123456,
+    "update_time": 1716547400.789012,
+    "mapping": {
+      "root-message-id-2": {
+        "id": "root-message-id-2",
+        "message": null,
+        "parent": null,
+        "children": ["system-message-id-2"]
+      },
+      "system-message-id-2": {
+        "id": "system-message-id-2",
+        "message": {
+          "id": "system-message-id-2",
+          "author": {"role": "system", "name": null, "metadata": {}},
+          "create_time": null,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": ["You are a helpful assistant."]},
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 0.0,
+          "metadata": {"is_visually_hidden_from_conversation": true},
+          "recipient": "all"
+        },
+        "parent": "root-message-id-2",
+        "children": ["user-message-id-3"]
+      },
+      "user-message-id-3": {
+        "id": "user-message-id-3",
+        "message": {
+          "id": "user-message-id-3",
+          "author": {"role": "user", "name": null, "metadata": {}},
+          "create_time": 1716547310.123456,
+          "update_time": null,
+          "content": {"content_type": "text", "parts": ["Can you show me an example of rich content?"]},
+          "status": "finished_successfully",
+          "end_turn": null,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "system-message-id-2",
+        "children": ["assistant-message-id-3"]
+      },
+      "assistant-message-id-3": {
+        "id": "assistant-message-id-3",
+        "message": {
+          "id": "assistant-message-id-3",
+          "author": {"role": "assistant", "name": null, "metadata": {}},
+          "create_time": 1716547320.123456,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Here's an example of rich content with a table:",
+              {
+                "type": "text",
+                "text": "Here's a simple table:\n\n| Name | Value |\n|------|-------|\n| Item 1 | 100 |\n| Item 2 | 200 |"
+              },
+              "And some formatted text as well."
+            ]
+          },
+          "status": "finished_successfully",
+          "end_turn": true,
+          "weight": 1.0,
+          "metadata": {},
+          "recipient": "all"
+        },
+        "parent": "user-message-id-3",
+        "children": []
+      }
+    },
+    "moderation_results": [],
+    "current_node": "assistant-message-id-3"
+  }
+] 
