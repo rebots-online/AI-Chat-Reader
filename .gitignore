@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 *.html
+!scripts/templates/*.html
 .Python
 env/
 data/html/

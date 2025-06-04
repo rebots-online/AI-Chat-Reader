@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ conversation.title }}</title>
+    <link rel="stylesheet" href="{{ assets_path }}/style.css">
+    <script src="{{ assets_path }}/script.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <header class="conversation-header">
+        <div class="breadcrumb">
+            <a href="{{ index_path }}">All Conversations</a>
+            {% if source_index_path %}
+            <span class="separator">/</span>
+            <a href="{{ source_index_path }}">{{ conversation.source|capitalize }}</a>
+            {% endif %}
+        </div>
+        <h1>{{ conversation.title }}</h1>
+        <div class="navigation-controls">
+            {% if prev_conversation %}
+            <a class="nav-button prev-button" href="{{ prev_conversation.filename }}">&laquo; {{ prev_conversation.title }}</a>
+            {% endif %}
+            {% if next_conversation %}
+            <a class="nav-button next-button" href="{{ next_conversation.filename }}">{{ next_conversation.title }} &raquo;</a>
+            {% endif %}
+        </div>
+    </header>
+    <div class="messages-container">
+        {% for msg in conversation.messages %}
+        <div class="message message-{{ msg.role }}">
+            <div class="bubble">
+                <div class="message-content">
+                    <p class="message-text">{{ msg.content | nl2br }}</p>
+                    {% if msg.timestamp %}
+                    <div class="message-timestamp">{{ msg.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                    {% endif %}
+                    <div class="copy-button" onclick="copyMessage(this)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 4 20 4 20 20 4 20 4 16"/>
+                            <rect x="8" y="8" width="12" height="12"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <footer class="page-footer">
+        Generated {{ generation_date.strftime('%Y-%m-%d') }}
+    </footer>
+</div>
+</body>
+</html>

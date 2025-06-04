@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ page_title }}</title>
+    <link rel="stylesheet" href="{{ assets_path }}/style.css">
+    <script src="{{ assets_path }}/script.js" defer></script>
+    <script>
+        window.conversationsData = {{ conversations_json|safe }};
+    </script>
+</head>
+<body>
+<div class="container">
+    <header class="index-header">
+        <h1>{{ page_title }}</h1>
+        <div class="search-controls">
+            <input type="text" id="search-input" placeholder="Search conversations...">
+            <button id="clear-search" style="display:none;">Clear</button>
+        </div>
+        <div class="filter-controls">
+            {% if show_source_filter %}
+            <select id="source-filter">
+                <option value="">All Sources</option>
+                {% for link in source_links %}
+                <option value="{{ link.name }}">{{ link.display_name }} ({{ link.count }})</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+            <select id="sort-filter">
+                <option value="date-desc">Newest</option>
+                <option value="date-asc">Oldest</option>
+                <option value="title-asc">Title A-Z</option>
+                <option value="title-desc">Title Z-A</option>
+                <option value="messages-desc">Most Messages</option>
+                <option value="messages-asc">Fewest Messages</option>
+            </select>
+        </div>
+    </header>
+    <ul id="conversations-list" class="conversations-list">
+        {% for conv in conversations %}
+        <li class="conversation-item" data-title="{{ conv.title|lower }}">
+            <a class="conversation-link" href="{{ conv.filename }}">
+                <div class="conversation-header">
+                    <h2 class="conversation-title">{{ conv.title }}</h2>
+                    <span class="date">{{ conv.created_at.strftime('%Y-%m-%d') if conv.created_at }}</span>
+                </div>
+                <div class="conversation-preview">{{ conv.preview }}</div>
+                <div class="conversation-meta">
+                    <span class="message-count">{{ conv.message_count }} messages</span>
+                    <span class="source-badge source-{{ conv.source }}">{{ conv.source }}</span>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    <p id="no-results" style="display:none;">No conversations found</p>
+    <footer class="page-footer">
+        Generated {{ generation_date.strftime('%Y-%m-%d') }}
+    </footer>
+</div>
+</body>
+</html>
