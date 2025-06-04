@@ -134,6 +134,15 @@ With that function producing the same shape as the OpenAI parser, the rendering 
 
 ---
 
+## 📤 Exporting Conversations
+
+Use `scripts/export_conversations.py` to convert selected chats to PDF, DOCX, Excel, CSV, Markdown or plain text.
+
+```bash
+python scripts/export_conversations.py --match "search text" --formats pdf,docx,md --output exports
+```
+
+
 ## 📂 Repository Structure
 
 ```
@@ -160,6 +169,10 @@ chat-html-generator/
    * Have a styling or usability suggestion.
 
 ---
+
+## 💳 Licensing via RevenueCat
+
+The optional module `scripts/revenuecat_client.py` provides a lightweight wrapper around the RevenueCat REST API for verifying lifetime and subscription purchases. Set `REVENUECAT_API_KEY` and call its methods within your automation.
 
 ## 📝 License
 
