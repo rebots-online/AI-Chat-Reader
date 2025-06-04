@@ -14,6 +14,9 @@ graph TD
     D --> J[AssetManager]
     J --> K[Assets]
     F --> L[PDF/DOCX/CSV/XLSX/MD/TXT]
+    L --> M[RevenueCatClient]
+    L --> N[GumroadClient]
+    L --> O[AlbyClient]
 ```
 
 This diagram summarizes how chat exports are transformed into multiple output formats within this project.
