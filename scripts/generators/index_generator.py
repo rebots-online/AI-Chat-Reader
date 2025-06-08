@@ -6,6 +6,7 @@ import json
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+import traceback
 
 
 class IndexGenerator:
@@ -101,6 +102,7 @@ class IndexGenerator:
             return True
             
         except Exception as e:
+            traceback.print_exc() # Added for detailed logging
             print(f"Error generating main index: {e}")
             return False
     
@@ -189,6 +191,7 @@ class IndexGenerator:
             return True
             
         except Exception as e:
+            traceback.print_exc() # Added for detailed logging
             print(f"Error generating {source_name} index: {e}")
             return False
     

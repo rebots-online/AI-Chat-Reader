@@ -10,6 +10,8 @@ import sys
 import zipfile
 from datetime import datetime
 from typing import List, Dict, Any
+import argparse # Added for command-line arguments
+from pathlib import Path # Added for Path operations, useful for filenames
 
 # Add the scripts directory to the Python path
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +23,9 @@ from parsers.base_parser import Conversation
 from generators.html_generator import HTMLGenerator
 from generators.index_generator import IndexGenerator
 from generators.asset_manager import AssetManager
+from generators.gif_generator import AnimatedGifGenerator # Added for GIF generation
+import pdfkit # Added for PDF generation
+import imgkit # Added for PNG/SVG generation
 
 
 class ChatArchiveConverter:
@@ -40,6 +45,15 @@ class ChatArchiveConverter:
         
         # Template and asset paths
         self.templates_dir = os.path.join(self.script_dir, 'templates')
+        print(f"[DEBUG] Absolute path for self.script_dir: {os.path.abspath(self.script_dir)}")
+        print(f"[DEBUG] Calculated self.templates_dir: {self.templates_dir}")
+        print(f"[DEBUG] Absolute path for self.templates_dir: {os.path.abspath(self.templates_dir)}")
+        try:
+            print(f"[DEBUG] Contents of self.templates_dir according to os.listdir: {os.listdir(self.templates_dir)}")
+        except FileNotFoundError:
+            print(f"[DEBUG] Error: self.templates_dir ({self.templates_dir}) not found by os.listdir.")
+        except Exception as e_listdir:
+            print(f"[DEBUG] Error listing contents of self.templates_dir ({self.templates_dir}): {e_listdir}")
         self.assets_dir = os.path.join(self.script_dir, 'assets')
         
         # Initialize components
@@ -48,6 +62,7 @@ class ChatArchiveConverter:
         self.html_generator = HTMLGenerator(self.templates_dir, self.assets_dir)
         self.index_generator = IndexGenerator(self.templates_dir)
         self.asset_manager = AssetManager(self.assets_dir)
+        self.gif_generator = AnimatedGifGenerator(assets_dir=self.assets_dir) # Initialized GIF generator
     
     def find_input_files(self) -> Dict[str, str]:
         """
@@ -252,7 +267,7 @@ class ChatArchiveConverter:
         print(f"Created zip package: {zip_path}")
         return zip_path
     
-    def convert(self) -> bool:
+    def convert(self, args) -> bool: # Added args parameter
         """
         Run the complete conversion process.
         
@@ -303,13 +318,144 @@ class ChatArchiveConverter:
             if not self.setup_assets(output_dir):
                 print("❌ Failed to setup assets!")
                 return False
+
+            # Generate PDFs if requested
+            if args.pdf:
+                print("=" * 50)
+                print("📄 Generating PDFs...")
+                pdf_export_dir = os.path.join(output_dir, 'pdfs')
+                os.makedirs(pdf_export_dir, exist_ok=True)
+
+                for item in all_metadata:
+                    try:
+                        html_file_path = os.path.join(output_dir, item['filename']) # item['filename'] is relative to output_dir
+
+                        # Determine source subdirectory for PDF from the HTML path
+                        # item['filename'] is like 'openai/conversations/file.html' or 'anthropic/conversations/file.html'
+                        path_parts = Path(item['filename']).parts
+                        source_subdir_for_pdf = path_parts[0] # e.g., 'openai' or 'anthropic'
+
+                        pdf_source_dir = os.path.join(pdf_export_dir, source_subdir_for_pdf)
+                        os.makedirs(pdf_source_dir, exist_ok=True)
+
+                        pdf_filename_base = Path(item['filename']).stem
+                        pdf_output_path = os.path.join(pdf_source_dir, f"{pdf_filename_base}.pdf")
+
+                        print(f"  Generating PDF for: {item['title']} ({item['source']}) -> {pdf_output_path}")
+                        pdfkit.from_file(html_file_path, pdf_output_path, options={'quiet': ''})
+                        print(f"    Successfully generated PDF: {pdf_output_path}")
+                    except Exception as e_pdf:
+                        print(f"    Error generating PDF for {item.get('title', 'Unknown Title')}: {e_pdf}")
+                print("PDF generation process complete.")
+
+            # Generate PNGs if requested
+            if args.png:
+                print("=" * 50)
+                print("🖼️ Generating PNGs...")
+                png_export_dir = os.path.join(output_dir, 'pngs')
+                os.makedirs(png_export_dir, exist_ok=True)
+
+                for item in all_metadata:
+                    try:
+                        html_file_path = os.path.join(output_dir, item['filename'])
+                        path_parts = Path(item['filename']).parts
+                        source_subdir_for_png = path_parts[0]
+
+                        png_source_dir = os.path.join(png_export_dir, source_subdir_for_png)
+                        os.makedirs(png_source_dir, exist_ok=True)
+
+                        png_filename_base = Path(item['filename']).stem
+                        png_output_path = os.path.join(png_source_dir, f"{png_filename_base}.png")
+
+                        print(f"  Generating PNG for: {item['title']} ({item['source']}) -> {png_output_path}")
+                        imgkit.from_file(html_file_path, png_output_path, options={'format': 'png', 'quiet': ''})
+                        print(f"    Successfully generated PNG: {png_output_path}")
+                    except Exception as e_png:
+                        print(f"    Error generating PNG for {item.get('title', 'Unknown Title')}: {e_png}")
+                print("PNG generation process complete.")
+
+            # Generate SVGs if requested
+            if args.svg:
+                print("=" * 50)
+                print("🖼️ Generating SVGs...")
+                svg_export_dir = os.path.join(output_dir, 'svgs')
+                os.makedirs(svg_export_dir, exist_ok=True)
+
+                for item in all_metadata:
+                    try:
+                        html_file_path = os.path.join(output_dir, item['filename'])
+                        path_parts = Path(item['filename']).parts
+                        source_subdir_for_svg = path_parts[0]
+
+                        svg_source_dir = os.path.join(svg_export_dir, source_subdir_for_svg)
+                        os.makedirs(svg_source_dir, exist_ok=True)
+
+                        svg_filename_base = Path(item['filename']).stem
+                        svg_output_path = os.path.join(svg_source_dir, f"{svg_filename_base}.svg")
+
+                        print(f"  Generating SVG for: {item['title']} ({item['source']}) -> {svg_output_path}")
+                        # For SVG, wkhtmltoimage might produce better results if direct SVG output is supported.
+                        # imgkit options for SVG might be limited or behave like raster-to-vector.
+                        # Using format: 'svg' with imgkit relies on wkhtmltoimage's capabilities.
+                        imgkit.from_file(html_file_path, svg_output_path, options={'format': 'svg', 'quiet': ''})
+                        print(f"    Successfully generated SVG: {svg_output_path}")
+                    except Exception as e_svg:
+                        print(f"    Error generating SVG for {item.get('title', 'Unknown Title')}: {e_svg}")
+                print("SVG generation process complete.")
             
             # Create zip package
             zip_path = self.create_zip_package(output_dir)
+
+            # Generate GIFs if requested
+            if args.gif:
+                print("=" * 50)
+                print("🖼️ Generating GIFs...")
+                # Overall directory for all GIFs from this export run
+                gif_export_run_dir = os.path.join(output_dir, 'gifs')
+                os.makedirs(gif_export_run_dir, exist_ok=True)
+
+                for source_name, conversations in conversations_by_source.items():
+                    if not conversations:
+                        continue
+
+                    # Source-specific subdirectory for GIFs
+                    source_gif_output_dir = os.path.join(gif_export_run_dir, source_name)
+                    os.makedirs(source_gif_output_dir, exist_ok=True)
+
+                    print(f"Generating GIFs for {len(conversations)} {source_name} conversations...")
+                    for conversation in conversations:
+                        # Find corresponding metadata to get the HTML filename base
+                        conv_metadata = next((m for m in all_metadata if m['id'] == conversation.id and m['source'] == source_name), None)
+
+                        if conv_metadata and 'filename' in conv_metadata:
+                            gif_filename_base = Path(conv_metadata['filename']).stem
+                            gif_output_path = os.path.join(source_gif_output_dir, f"{gif_filename_base}.gif")
+
+                            print(f"  Generating GIF for: {conversation.title} -> {gif_output_path}")
+                            try:
+                                success_gif = self.gif_generator.generate_gif(conversation, str(gif_output_path))
+                                if success_gif:
+                                    print(f"    Successfully generated GIF: {gif_output_path}")
+                                else:
+                                    print(f"    Failed to generate GIF for: {conversation.title}")
+                            except Exception as e_gif:
+                                print(f"    Error generating GIF for {conversation.title}: {e_gif}")
+                        else:
+                            print(f"  Skipping GIF for conversation ID {conversation.id} (source: {source_name}) due to missing metadata or filename.")
+                print("GIF generation process complete.")
             
             print("=" * 50)
             print("✅ Conversion completed successfully!")
             print(f"📁 HTML files: {output_dir}")
+            if args.pdf:
+                print(f"📄 PDFs: {pdf_export_dir}")
+            if args.png:
+                print(f"🖼️ PNGs: {png_export_dir}")
+            if args.svg:
+                print(f"🖼️ SVGs: {svg_export_dir}")
+            if args.gif: # GIF dir is defined inside its own "if args.gif" block
+                gif_export_run_dir = os.path.join(output_dir, 'gifs') # Re-define for printout
+                print(f"🖼️ GIFs: {gif_export_run_dir}")
             print(f"📦 Zip package: {zip_path}")
             print(f"🌐 Open {os.path.join(output_dir, 'index.html')} in your browser")
             
@@ -324,8 +470,18 @@ class ChatArchiveConverter:
 
 def main():
     """Main entry point."""
-    converter = ChatArchiveConverter()
-    success = converter.convert()
+    parser = argparse.ArgumentParser(description="Convert chat archives to HTML and optionally GIFs/PDFs/PNGs/SVGs.")
+    parser.add_argument('--gif', action='store_true', help='Generate animated GIF for each conversation')
+    parser.add_argument('--pdf', action='store_true', help='Generate PDF for each conversation')
+    parser.add_argument('--png', action='store_true', help='Generate PNG image for each conversation')
+    parser.add_argument('--svg', action='store_true', help='Generate SVG image for each conversation')
+    # One could add --input-dir and --output-dir arguments here if needed
+    # parser.add_argument('--input-dir', default='data/raw', help='Directory containing raw chat files.')
+    # parser.add_argument('--output-dir', default='data/html', help='Base directory for HTML output.')
+    args = parser.parse_args()
+
+    converter = ChatArchiveConverter() # Potentially pass input/output dirs from args if added
+    success = converter.convert(args) # Pass args to convert method
     sys.exit(0 if success else 1)
 
 

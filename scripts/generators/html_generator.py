@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import List, Dict, Any, Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from parsers.base_parser import Conversation, Message
+import traceback
 
 
 class HTMLGenerator:
@@ -84,6 +85,7 @@ class HTMLGenerator:
             return True
             
         except Exception as e:
+            traceback.print_exc() # Added for detailed logging
             print(f"Error generating HTML for conversation {conversation.title}: {e}")
             return False
     
