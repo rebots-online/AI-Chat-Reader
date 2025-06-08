@@ -6,6 +6,7 @@ import json
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+import traceback
 
 
 class IndexGenerator:
@@ -70,7 +71,8 @@ class IndexGenerator:
                     'created_at': c['created_at'].isoformat() if c.get('created_at') else None,
                     'message_count': c.get('message_count', 0),
                     'preview': c.get('preview', ''),
-                    'filename': c['filename']
+                    'filename': c['filename'],
+                    'uuid': c.get('uuid', ''),
                 }
                 for c in sorted_conversations
             ])
@@ -101,6 +103,7 @@ class IndexGenerator:
             return True
             
         except Exception as e:
+            traceback.print_exc() # Added for detailed logging
             print(f"Error generating main index: {e}")
             return False
     
@@ -154,7 +157,8 @@ class IndexGenerator:
                     'created_at': c['created_at'].isoformat() if c.get('created_at') else None,
                     'message_count': c.get('message_count', 0),
                     'preview': c.get('preview', ''),
-                    'filename': f"conversations/{os.path.basename(c['filename'])}"
+                    'filename': f"conversations/{os.path.basename(c['filename'])}",
+                    'uuid': c.get('uuid', ''),
                 }
                 for c in sorted_conversations
             ])
@@ -189,6 +193,7 @@ class IndexGenerator:
             return True
             
         except Exception as e:
+            traceback.print_exc() # Added for detailed logging
             print(f"Error generating {source_name} index: {e}")
             return False
     
