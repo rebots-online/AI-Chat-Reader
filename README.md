@@ -176,10 +176,7 @@ The optional module `scripts/revenuecat_client.py` provides a lightweight wrappe
 
 ## 📝 License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
+All Rights Reserved
 ## 🙏 Acknowledgments
 
 * Inspired by [convert\_openai\_chats.py](#) and community feedback.
