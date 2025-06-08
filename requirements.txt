@@ -1,6 +1,9 @@
 Jinja2>=3.0.0
 MarkupSafe>=2.0.0
-requests>=2.0.0
-python-docx>=0.8.10
+Pillow
+imgkit
 openpyxl>=3.1.0
+pdfkit
+python-docx>=0.8.10
 reportlab>=3.6.0
+requests>=2.0.0
