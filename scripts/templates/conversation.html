@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ conversation.title | default("Untitled Conversation") }} - Chat Export</title>
+    <link rel="stylesheet" href="{{ assets_path }}/style.css">
+</head>
+<body>
+    <header>
+        <div class="nav-links">
+            <a href="{{ index_path }}">&larr; Main Index</a>
+            {% if source_index_path %}
+            <a href="{{ source_index_path }}">&larr; {{ (conversation.source | default("unknown")) | title }} Index</a>
+            {% endif %}
+        </div>
+        <h1>{{ conversation.title | default("Untitled Conversation") }}</h1>
+        <p class="conversation-meta">
+            Source: {{ (conversation.source | default("unknown")) | title }} |
+            Created: {{ conversation.created_at.strftime('%Y-%m-%d %H:%M:%S') if conversation.created_at else 'N/A' }} |
+            Messages: {{ (conversation.messages | default([])) | length }}
+        </p>
+        <div class="nav-conv">
+            {% if prev_conversation %}
+            <a href="{{ prev_conversation.filename | default('#') }}">&laquo; Prev: {{ prev_conversation.title | default("Previous Conversation") }}</a>
+            {% endif %}
+            {% if next_conversation %}
+            <a href="{{ next_conversation.filename | default('#') }}">Next: {{ next_conversation.title | default("Next Conversation") }} &raquo;</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="chat-container">
+        {% for message in conversation.messages | default([]) %}
+        <div class="message {{ (message.role | default('unknown')) | lower }}-message">
+            <div class="message-bubble">
+                <div class="message-sender">{{ (message.role | default('unknown')) | title }}</div>
+                <div class="message-content">
+                    {{ message.content | nl2br }}
+                </div>
+                <div class="message-timestamp">
+                    {{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') if message.timestamp else '' }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </main>
+
+    <footer>
+        <p>Export generated on {{ generation_date.strftime('%Y-%m-%d %H:%M:%S') if generation_date else 'N/A' }}</p>
+        <p><a href="#top">Back to top</a></p>
+    </footer>
+
+    <script src="{{ assets_path }}/script.js"></script>
+</body>
+</html>
