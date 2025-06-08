@@ -45,6 +45,15 @@ class ChatArchiveConverter:
         
         # Template and asset paths
         self.templates_dir = os.path.join(self.script_dir, 'templates')
+        print(f"[DEBUG] Absolute path for self.script_dir: {os.path.abspath(self.script_dir)}")
+        print(f"[DEBUG] Calculated self.templates_dir: {self.templates_dir}")
+        print(f"[DEBUG] Absolute path for self.templates_dir: {os.path.abspath(self.templates_dir)}")
+        try:
+            print(f"[DEBUG] Contents of self.templates_dir according to os.listdir: {os.listdir(self.templates_dir)}")
+        except FileNotFoundError:
+            print(f"[DEBUG] Error: self.templates_dir ({self.templates_dir}) not found by os.listdir.")
+        except Exception as e_listdir:
+            print(f"[DEBUG] Error listing contents of self.templates_dir ({self.templates_dir}): {e_listdir}")
         self.assets_dir = os.path.join(self.script_dir, 'assets')
         
         # Initialize components
