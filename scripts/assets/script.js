@@ -8,7 +8,10 @@ let filteredConversations = [];
 function initializeTheme() {
     const savedTheme = localStorage.getItem('chat-archive-theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    
+
+    const savedStyle = localStorage.getItem('chat-archive-style') || 'brutalist';
+    document.documentElement.setAttribute('data-style', savedStyle);
+
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
@@ -23,7 +26,9 @@ function toggleTheme() {
     localStorage.setItem('chat-archive-theme', newTheme);
 }
 
+
 // Initialize search functionality
+    
 function initializeSearch() {
     const searchInput = document.getElementById('search-input');
     const clearButton = document.getElementById('clear-search');
@@ -242,20 +247,19 @@ function highlightSearchTerms(text, query) {
 }
 
 // Copy functionality for conversation pages
+
 function copyMessage(button) {
-    const messageText = button.parentElement.querySelector('.message-text').textContent;
-    
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(messageText).then(() => {
+    const messageTextElem = button.parentElement.querySelector('.message-text');
+    const markdown = messageTextElem.dataset.markdown || messageTextElem.innerText;
+    navigator.clipboard.writeText(markdown)
+        .then(() => {
             showCopyFeedback(button);
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-            fallbackCopyTextToClipboard(messageText, button);
+        })
+        .catch(err => {
+            console.error('Failed to copy message:', err);
         });
-    } else {
-        fallbackCopyTextToClipboard(messageText, button);
-    }
 }
+    
 
 function fallbackCopyTextToClipboard(text, button) {
     const textArea = document.createElement('textarea');
@@ -339,9 +343,25 @@ function handleMobileSearch() {
     }
 }
 
+function initializeStyleSelector() {
+    const selector = document.getElementById('style-selector');
+    if (!selector) return;
+
+    const currentStyle = document.documentElement.getAttribute('data-style') || 'brutalist';
+    selector.value = currentStyle;
+
+    selector.addEventListener('change', function(e) {
+        const style = e.target.value;
+        document.documentElement.setAttribute('data-style', style);
+        localStorage.setItem('chat-archive-style', style);
+    });
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+
     initializeTheme();
+    initializeStyleSelector();
     initializeSearch();
     initializeFilters();
     handleMobileSearch();

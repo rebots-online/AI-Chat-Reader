@@ -636,3 +636,89 @@ code {
         margin-bottom: 20px;
     }
 }
+
+/* Multi-theme style overrides */
+[data-style="brutalist"][data-theme="light"] {
+    /* Default brutalist-minimal light; root variables apply */
+}
+[data-style="brutalist"][data-theme="dark"] {
+    /* Default dark theme; dark variables apply */
+}
+
+/* Skeuomorphic theme */
+[data-style="skeuomorphic"][data-theme="light"] {
+    --bg-primary: #f0ebe1;
+    --bg-secondary: #e0d6c2;
+    --bg-tertiary: #d1c0a5;
+    --text-primary: #3b2f2f;
+    --user-bubble-bg: #c8a165;
+    --assistant-bubble-bg: #f5f0e6;
+    --border-color: #b3a090;
+}
+[data-style="skeuomorphic"][data-theme="dark"] {
+    --bg-primary: #2e2b26;
+    --bg-primary: #2e2b28;
+    --bg-secondary: #383635;
+    --bg-tertiary: #444240;
+    --text-primary: #e4dcd1;
+    --user-bubble-bg: #735820;
+    --assistant-bubble-bg: #3b3835;
+    --border-color: #4a4947;
+}
+
+/* Retro theme */
+[data-style="retro"][data-theme="light"] {
+    --bg-primary: #fffbe6;
+    --bg-secondary: #f7e7b2;
+    --bg-tertiary: #f0d980;
+    --text-primary: #5d4037;
+    --user-bubble-bg: #ff8f00;
+    --assistant-bubble-bg: #8bc34a;
+    --border-color: #d18b11;
+}
+[data-style="retro"][data-theme="dark"] {
+    --bg-primary: #2e240a;
+    --bg-secondary: #3a3112;
+    --bg-tertiary: #4c3e1b;
+    --text-primary: #ffd54f;
+    --user-bubble-bg: #ff8f00;
+    --assistant-bubble-bg: #8bc34a;
+    --border-color: #ffa726;
+    --bg-primary: #1b2631;
+    --bg-secondary: #2c3e50;
+    --bg-tertiary: #34495e;
+    --text-primary: #ecf0f1;
+    --user-bubble-bg: #e67e22;
+    --assistant-bubble-bg: #27ae60;
+    --border-color: #1f2833;
+}
+
+/* Glassmorphic theme */
+[data-style="glassmorphic"][data-theme="light"] {
+    --bg-primary: rgba(255, 255, 255, 0.7);
+    --bg-secondary: rgba(255, 255, 255, 0.5);
+    --bg-primary: rgba(255, 255, 255, 0.6);
+    --bg-secondary: rgba(255, 255, 255, 0.4);
+    --bg-tertiary: rgba(255, 255, 255, 0.3);
+    --text-primary: #000000;
+    --user-bubble-bg: rgba(255, 255, 255, 0.5);
+    --assistant-bubble-bg: rgba(255, 255, 255, 0.4);
+    --border-color: rgba(255, 255, 255, 0.6);
+    --user-bubble-bg: rgba(255, 255, 255, 0.7);
+    --assistant-bubble-bg: rgba(0, 0, 0, 0.1);
+    --border-color: rgba(255, 255, 255, 0.5);
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+[data-style="glassmorphic"][data-theme="dark"] {
+    --bg-primary: rgba(0, 0, 0, 0.6);
+    --bg-secondary: rgba(0, 0, 0, 0.4);
+    --bg-tertiary: rgba(0, 0, 0, 0.2);
+    --bg-tertiary: rgba(0, 0, 0, 0.3);
+    --text-primary: #ffffff;
+    --user-bubble-bg: rgba(255, 255, 255, 0.2);
+    --assistant-bubble-bg: rgba(0, 0, 0, 0.3);
+    --user-bubble-bg: rgba(255, 255, 255, 0.1);
+    --assistant-bubble-bg: rgba(255, 255, 255, 0.2);
+    --border-color: rgba(255, 255, 255, 0.3);
+    --shadow: rgba(0, 0, 0, 0.2);
+}

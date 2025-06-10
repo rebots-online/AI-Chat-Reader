@@ -1,4 +1,17 @@
 <!DOCTYPE html>
+
+<header>
+    <div class="nav-links">
+        <!-- ... existing nav links ... -->
+    </div>
+    <div class="header-controls">
+        <select id="style-selector">
+            <option value="brutalist">Brutalist</option>
+            <option value="skeuomorphic">Skeuomorphic</option>
+            <option value="retro">Retro</option>
+            <option value="glassmorphic">Glassmorphic</option>
+        </select>
+    </div>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -36,12 +49,12 @@
             <div class="bubble message-bubble">
                 <div class="message-sender">{{ (message.role | default('unknown')) | title }}</div>
                 <div class="message-content">
-                    <div class="message-text">
-                        {{ message.content | nl2br }}
+                    <div class="message-text" data-markdown="{{ message.content | e }}">
+                        {{ message.content_html | safe }}
                     </div>
                     <button class="copy-button" onclick="copyMessage(this)" title="Copy message">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20,6 9,17 4,12"></polyline>
+                            <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </button>
                 </div>
@@ -61,3 +74,4 @@
     <script src="{{ assets_path }}/script.js"></script>
 </body>
 </html>
+</header>

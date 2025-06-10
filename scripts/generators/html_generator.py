@@ -8,7 +8,7 @@ from typing import List, Dict, Any, Optional
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from parsers.base_parser import Conversation, Message
 import traceback
-
+import markdown
 
 class HTMLGenerator:
     """Generates HTML files for individual conversations."""
@@ -148,6 +148,10 @@ class HTMLGenerator:
                     'title': next_conversation.title
                 }
             
+            # Convert markdown content of each message to HTML
+            for message in conversation.messages:
+                message.content_html = markdown.markdown(message.content)
+            
             # Generate HTML
             success = self.generate_conversation_html(
                 conversation=conversation,
@@ -205,27 +209,11 @@ class HTMLGenerator:
         Returns:
             Preview text string
         """
-        if not conversation.messages:
-            return ""
-        
-        # Find the first substantial user message
-        for message in conversation.messages:
-            if message.role == 'user' and len(message.content.strip()) > 20:
-                content = message.content.strip()
-                if len(content) <= max_length:
-                    return content
-                else:
-                    return content[:max_length - 3] + "..."
-        
-        # Fallback to first message
-        if conversation.messages:
-            content = conversation.messages[0].content.strip()
-            if len(content) <= max_length:
-                return content
-            else:
-                return content[:max_length - 3] + "..."
-        
-        return ""
+        import re
+        raw = conversation.messages[-1].content if conversation.messages else ''
+        plain = re.sub(r'[#*_>\[\]\(\)`]', '', raw)
+        content = plain
+        return content.strip()[:100]
     
     def _nl2br_filter(self, text: str) -> str:
         """
