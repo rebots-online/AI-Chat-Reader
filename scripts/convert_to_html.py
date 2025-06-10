@@ -165,12 +165,13 @@ class ChatArchiveConverter:
             
             print(f"Generating HTML files for {len(conversations)} {source_name} conversations...")
             
-            # Generate conversation HTML files
+            
+            # Generate conversation HTML files for this source
             metadata = self.html_generator.generate_conversations_batch(
                 conversations=conversations,
                 output_dir=output_dir,
                 source_subdir=source_name,
-                assets_relative_path="../../assets",
+                assets_relative_path="../assets",
                 index_relative_path="../../index.html",
                 source_index_relative_path="../index.html"
             )

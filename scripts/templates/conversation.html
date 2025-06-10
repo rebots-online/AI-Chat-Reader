@@ -32,11 +32,18 @@
 
     <main class="chat-container">
         {% for message in conversation.messages | default([]) %}
-        <div class="message {{ (message.role | default('unknown')) | lower }}-message">
-            <div class="message-bubble">
+        <div class="message message-{{ message.role | lower }}">
+            <div class="bubble message-bubble">
                 <div class="message-sender">{{ (message.role | default('unknown')) | title }}</div>
                 <div class="message-content">
-                    {{ message.content | nl2br }}
+                    <div class="message-text">
+                        {{ message.content | nl2br }}
+                    </div>
+                    <button class="copy-button" onclick="copyMessage(this)" title="Copy message">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20,6 9,17 4,12"></polyline>
+                        </svg>
+                    </button>
                 </div>
                 <div class="message-timestamp">
                     {{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') if message.timestamp else '' }}

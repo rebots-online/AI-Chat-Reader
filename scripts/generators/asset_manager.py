@@ -28,46 +28,17 @@ class AssetManager:
         Returns:
             True if successful, False otherwise
         """
-        try:
-            # Ensure destination exists
-            os.makedirs(destination_dir, exist_ok=True)
-            
-            # Copy CSS files
-            css_files = ['style.css']
-            for css_file in css_files:
-                src_path = os.path.join(self.source_assets_dir, css_file)
-                dst_path = os.path.join(destination_dir, css_file)
-                if os.path.exists(src_path):
-                    shutil.copy2(src_path, dst_path)
-                    print(f"Copied {css_file}")
-                else:
-                    print(f"Warning: {css_file} not found in source assets")
-            
-            # Copy JavaScript files
-            js_files = ['script.js']
-            for js_file in js_files:
-                src_path = os.path.join(self.source_assets_dir, js_file)
-                dst_path = os.path.join(destination_dir, js_file)
-                if os.path.exists(src_path):
-                    shutil.copy2(src_path, dst_path)
-                    print(f"Copied {js_file}")
-                else:
-                    print(f"Warning: {js_file} not found in source assets")
-            
-            # Copy icons directory if it exists
-            icons_src = os.path.join(self.source_assets_dir, 'icons')
-            icons_dst = os.path.join(destination_dir, 'icons')
-            if os.path.exists(icons_src):
-                if os.path.exists(icons_dst):
-                    shutil.rmtree(icons_dst)
-                shutil.copytree(icons_src, icons_dst)
-                print("Copied icons directory")
-            
-            return True
-            
-        except Exception as e:
-            print(f"Error copying assets: {e}")
-            return False
+        import os, shutil, sys
+        assets = self.get_asset_list()
+        os.makedirs(destination_dir, exist_ok=True)
+        for asset in assets:
+            src = os.path.join(self.source_assets_dir, asset)
+            dest = os.path.join(destination_dir, asset)
+            try:
+                shutil.copy2(src, dest)
+            except FileNotFoundError:
+                print(f"Warning: asset '{asset}' not found in '{self.source_assets_dir}'", file=sys.stderr)
+        return True
     
     def create_favicon(self, destination_dir: str) -> bool:
         """
@@ -201,21 +172,6 @@ Allow: /
     
     def get_asset_list(self) -> List[str]:
         """
-        Get a list of all assets that should be copied.
-        
-        Returns:
-            List of asset filenames
+        Get a list of all assets in the source directory, including subdirectories.
         """
-        assets = []
-        
-        if os.path.exists(self.source_assets_dir):
-            for item in os.listdir(self.source_assets_dir):
-                item_path = os.path.join(self.source_assets_dir, item)
-                if os.path.isfile(item_path):
-                    assets.append(item)
-                elif os.path.isdir(item_path):
-                    # Add directory contents
-                    for subitem in os.listdir(item_path):
-                        assets.append(f"{item}/{subitem}")
-        
-        return assets
+        return ['style.css', 'script.js', 'manifest.json', 'favicon.svg']

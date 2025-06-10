@@ -17,7 +17,10 @@
         </nav>
         {% endif %}
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search conversations..." title="Enter keywords to filter conversations">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search conversations..." title="Enter keywords to filter conversations">
+                <button id="clear-search" class="clear-button" title="Clear search">&times;</button>
+            </div>
         </div>
         {% if show_source_filter and source_links %}
         <div class="source-filter">
@@ -41,9 +44,10 @@
             </p>
         </div>
 
-        <ul id="conversationList" class="conversation-list">
+        <ul id="conversations-list" class="conversation-list">
             {% for conv in conversations | default([]) %}
             <li class="conversation-item"
+                data-uuid="{{ conv.uuid | default('') }}"
                 data-title="{{ conv.title | default('Untitled') }}"
                 data-source="{{ conv.source | default('unknown') }}"
                 data-created_at="{{ conv.created_at.isoformat() if conv.created_at else '' }}"
@@ -62,6 +66,7 @@
             <li>No conversations found.</li>
             {% endfor %}
         </ul>
+        <div id="no-results" class="no-results" style="display:none;">No conversations found.</div>
     </main>
 
     <footer>
@@ -69,10 +74,12 @@
         <p>Powered by HTML Chat Converter</p>
     </footer>
 
+
     <script>
         // Pass conversation data to JavaScript for searching
-        const conversationsData = {{ conversations_json | default('[]') | safe }};
+        window.conversationsData = {{ conversations_json | default('[]') | safe }};
     </script>
     <script src="{{ assets_path }}/script.js"></script>
+    
 </body>
 </html>

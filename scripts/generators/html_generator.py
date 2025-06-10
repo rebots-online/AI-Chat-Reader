@@ -94,7 +94,7 @@ class HTMLGenerator:
         conversations: List[Conversation],
         output_dir: str,
         source_subdir: str,
-        assets_relative_path: str = "../../assets",
+        assets_relative_path: str = "../assets",
         index_relative_path: str = "../../index.html",
         source_index_relative_path: Optional[str] = None
     ) -> List[Dict[str, Any]]:
