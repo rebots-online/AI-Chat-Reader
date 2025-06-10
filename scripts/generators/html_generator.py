@@ -169,7 +169,7 @@ class HTMLGenerator:
                     'updated_at': conversation.updated_at,
                     'message_count': len(conversation.messages),
                     'preview': self._generate_preview(conversation),
-                    'uuid': conversation.uuid
+                    'uuid': getattr(conversation, "uuid", conversation.id)
                 }
                 conversation_metadata.append(metadata)
             else:
