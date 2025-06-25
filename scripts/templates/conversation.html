@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ conversation.title | default("Untitled Conversation") }} - Chat Export</title>
     <link rel="stylesheet" href="{{ assets_path }}/style.css">
+    <script src="{{ assets_path }}/script.js" defer></script>
 </head>
 <body>
-    <header>
-        <div class="nav-links">
+<div class="container">
+    <header class="conversation-header">
+        <div class="breadcrumb">
             <a href="{{ index_path }}">&larr; Main Index</a>
             {% if source_index_path %}
+            <span class="separator">/</span>
             <a href="{{ source_index_path }}">&larr; {{ (conversation.source | default("unknown")) | title }} Index</a>
             {% endif %}
         </div>
@@ -20,37 +23,41 @@
             Created: {{ conversation.created_at.strftime('%Y-%m-%d %H:%M:%S') if conversation.created_at else 'N/A' }} |
             Messages: {{ (conversation.messages | default([])) | length }}
         </p>
-        <div class="nav-conv">
+        <div class="navigation-controls">
             {% if prev_conversation %}
-            <a href="{{ prev_conversation.filename | default('#') }}">&laquo; Prev: {{ prev_conversation.title | default("Previous Conversation") }}</a>
+            <a class="nav-button prev-button" href="{{ prev_conversation.filename | default('#') }}">&laquo; {{ prev_conversation.title | default("Previous Conversation") }}</a>
             {% endif %}
             {% if next_conversation %}
-            <a href="{{ next_conversation.filename | default('#') }}">Next: {{ next_conversation.title | default("Next Conversation") }} &raquo;</a>
+            <a class="nav-button next-button" href="{{ next_conversation.filename | default('#') }}">{{ next_conversation.title | default("Next Conversation") }} &raquo;</a>
             {% endif %}
         </div>
     </header>
-
-    <main class="chat-container">
+    <main class="messages-container">
         {% for message in conversation.messages | default([]) %}
-        <div class="message {{ (message.role | default('unknown')) | lower }}-message">
-            <div class="message-bubble">
+        <div class="message message-{{ (message.role | default('unknown')) | lower }}">
+            <div class="bubble">
                 <div class="message-sender">{{ (message.role | default('unknown')) | title }}</div>
                 <div class="message-content">
-                    {{ message.content | nl2br }}
-                </div>
-                <div class="message-timestamp">
-                    {{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') if message.timestamp else '' }}
+                    <p class="message-text">{{ message.content | nl2br }}</p>
+                    {% if message.timestamp %}
+                    <div class="message-timestamp">{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') if message.timestamp else '' }}</div>
+                    {% endif %}
+                    <div class="copy-button" onclick="copyMessage(this)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 4 20 4 20 20 4 20 4 16"/>
+                            <rect x="8" y="8" width="12" height="12"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
         {% endfor %}
     </main>
 
-    <footer>
+    <footer class="page-footer">
         <p>Export generated on {{ generation_date.strftime('%Y-%m-%d %H:%M:%S') if generation_date else 'N/A' }}</p>
         <p><a href="#top">Back to top</a></p>
     </footer>
-
-    <script src="{{ assets_path }}/script.js"></script>
+</div>
 </body>
 </html>

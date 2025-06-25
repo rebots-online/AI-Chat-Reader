@@ -7,27 +7,39 @@
     <link rel="stylesheet" href="{{ assets_path }}/style.css">
     <link rel="icon" href="{{ assets_path }}/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="{{ assets_path }}/manifest.json">
+    <script src="{{ assets_path }}/script.js" defer></script>
 </head>
 <body>
-    <header>
+<div class="container">
+    <header class="index-header">
         <h1>{{ page_title | default("Chat Archive") }}</h1>
         {% if breadcrumb %}
         <nav class="breadcrumb">
             <a href="{{ breadcrumb.url | default('#') }}">{{ breadcrumb.text | default('Back') }}</a> &raquo; {{ page_title | default("Chat Archive") }}
         </nav>
         {% endif %}
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search conversations..." title="Enter keywords to filter conversations">
+        <div class="search-controls">
+            <input type="text" id="search-input" placeholder="Search conversations..." title="Enter keywords to filter conversations">
+            <button id="clear-search" style="display:none;">Clear</button>
         </div>
-        {% if show_source_filter and source_links %}
-        <div class="source-filter">
-            <span>Filter by source:</span>
-            <a href="{{ '../index.html' if breadcrumb else 'index.html' }}">All ({{ (conversations | default([])) | length }})</a>
-            {% for link in source_links | default([]) %}
-            <a href="{{ link.url | default('#') }}">{{ link.display_name | default('Unknown Source') }} ({{ link.count | default(0) }})</a>
-            {% endfor %}
+        <div class="filter-controls">
+            {% if show_source_filter and source_links %}
+            <select id="source-filter">
+                <option value="">All Sources</option>
+                {% for link in source_links | default([]) %}
+                <option value="{{ link.name }}">{{ link.display_name | default('Unknown Source') }} ({{ link.count | default(0) }})</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+            <select id="sort-filter">
+                <option value="date-desc">Newest</option>
+                <option value="date-asc">Oldest</option>
+                <option value="title-asc">Title A-Z</option>
+                <option value="title-desc">Title Z-A</option>
+                <option value="messages-desc">Most Messages</option>
+                <option value="messages-asc">Fewest Messages</option>
+            </select>
         </div>
-        {% endif %}
     </header>
 
     <main>
@@ -41,38 +53,40 @@
             </p>
         </div>
 
-        <ul id="conversationList" class="conversation-list">
+        <ul id="conversations-list" class="conversations-list">
             {% for conv in conversations | default([]) %}
-            <li class="conversation-item"
-                data-title="{{ conv.title | default('Untitled') }}"
+            <li class="conversation-item" 
+                data-title="{{ conv.title | default('Untitled') | lower }}"
                 data-source="{{ conv.source | default('unknown') }}"
-                data-created_at="{{ conv.created_at.isoformat() if conv.created_at else '' }}"
-                data-preview="{{ conv.preview | default('') | escape }}">
-                <a href="{{ conv.filename | default('#') }}">
-                    <h2 class="conversation-title">{{ conv.title | default('Untitled Conversation') }}</h2>
-                    <p class="conversation-meta">
-                        Source: {{ (conv.source | default('unknown')) | title }} |
-                        Created: {{ conv.created_at.strftime('%Y-%m-%d %H:%M:%S') if conv.created_at else 'N/A' }} |
-                        Messages: {{ conv.message_count | default(0) }}
-                    </p>
-                    <p class="conversation-preview">{{ conv.preview | default('') }}</p>
+                data-created_at="{{ conv.created_at.isoformat() if conv.created_at else '' }}">
+                <a class="conversation-link" href="{{ conv.filename | default('#') }}">
+                    <div class="conversation-header">
+                        <h2 class="conversation-title">{{ conv.title | default('Untitled Conversation') }}</h2>
+                        <span class="date">{{ conv.created_at.strftime('%Y-%m-%d %H:%M:%S') if conv.created_at else 'N/A' }}</span>
+                    </div>
+                    <div class="conversation-preview">{{ conv.preview | default('') }}</div>
+                    <div class="conversation-meta">
+                        <span class="message-count">{{ conv.message_count | default(0) }} messages</span>
+                        <span class="source-badge source-{{ conv.source | default('unknown') }}">{{ (conv.source | default('unknown')) | title }}</span>
+                    </div>
                 </a>
             </li>
             {% else %}
             <li>No conversations found.</li>
             {% endfor %}
         </ul>
+        <p id="no-results" style="display:none;">No conversations found</p>
     </main>
 
-    <footer>
+    <footer class="page-footer">
         <p>Export generated on {{ generation_date.strftime('%Y-%m-%d %H:%M:%S') if generation_date else 'N/A' }}</p>
         <p>Powered by HTML Chat Converter</p>
     </footer>
+</div>
 
-    <script>
-        // Pass conversation data to JavaScript for searching
-        const conversationsData = {{ conversations_json | default('[]') | safe }};
-    </script>
-    <script src="{{ assets_path }}/script.js"></script>
+<script>
+    // Pass conversation data to JavaScript for searching
+    const conversationsData = {{ conversations_json | default('[]') | safe }};
+</script>
 </body>
 </html>
