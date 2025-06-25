@@ -175,13 +175,9 @@ chat-html-generator/
 The optional module `scripts/revenuecat_client.py` provides a lightweight wrapper around the RevenueCat REST API for verifying lifetime and subscription purchases. Set `REVENUECAT_API_KEY` and call its methods within your automation.
 
 Additionally, `scripts/gumroad_client.py` allows verifying Gumroad license keys for one-off lifetime purchases or subscription sales. For pay-as-you-go Lightning payments, use `scripts/alby_client.py` which wraps the Alby API.
-
 ## 📝 License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
+All Rights Reserved
 ## 🙏 Acknowledgments
 
 * Inspired by [convert\_openai\_chats.py](#) and community feedback.

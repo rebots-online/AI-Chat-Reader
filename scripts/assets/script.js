@@ -164,7 +164,7 @@ function updateConversationsList() {
     
     // Show matching items
     filteredConversations.forEach(conv => {
-        const item = conversationsList.querySelector(`[data-title*="${conv.title.toLowerCase()}"]`);
+        const item = conversationsList.querySelector(`li[data-uuid="${conv.uuid}"]`); // Changed to use UUID
         if (item) {
             item.style.display = 'block';
         }
