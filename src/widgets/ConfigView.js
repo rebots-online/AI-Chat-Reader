@@ -227,4 +227,5 @@ const ConfigView = GObject.registerClass(
 }
 
 var _ConfigView = ConfigView;
+);
 
