@@ -35,6 +35,9 @@ fi
 DEB_DIR=dist/deb/chat-archive-converter
 mkdir -p "$DEB_DIR/DEBIAN" "$DEB_DIR/usr/bin"
 cp dist/chat-archive-converter "$DEB_DIR/usr/bin/"
+mkdir -p "$DEB_DIR/usr/share/applications" "$DEB_DIR/usr/share/icons/hicolor/256x256/apps"
+cp "$APPDIR/chat-archive-converter.desktop" "$DEB_DIR/usr/share/applications/"
+cp "$APPDIR/usr/share/icons/hicolor/256x256/apps/chat-archive-converter.png" "$DEB_DIR/usr/share/icons/hicolor/256x256/apps/"
 cat > "$DEB_DIR/DEBIAN/control" <<EOD
 Package: chat-archive-converter
 Version: 1.0
