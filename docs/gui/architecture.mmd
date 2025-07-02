@@ -1,123 +1,19 @@
 classDiagram
-    %% Main Application Structure
-    class AI_Chat_Reader_App {
-        +Gtk.Application
-        +startup()
-        +activate()
-        +shutdown()
-    }
-    
-    class MainWindow {
-        +Gtk.ApplicationWindow
-        +header_bar: HeaderBar
-        +main_box: Gtk.Box
-        +sidebar: Sidebar
-        +chat_view: ChatView
-        +input_area: InputArea
-    }
-    
-    class HeaderBar {
-        +Gtk.HeaderBar
-        +menu_button: Gtk.MenuButton
-        +new_chat_button: Gtk.Button
-    }
-    
-    class Sidebar {
-        +Gtk.Box
-        +search_entry: Gtk.SearchEntry
-        +chat_list: ChatList
-        +settings_button: Gtk.Button
-    }
-    
-    class ChatView {
-        +Gtk.ScrolledWindow
-        +message_list: Gtk.ListBox
-        +add_message()
-        +clear_messages()
-    }
-    
-    class MessageBubble {
-        +Gtk.Box
-        +sender: string
-        +timestamp: string
-        +content: string
-    }
-    
-    class InputArea {
-        +Gtk.Box
-        +text_view: Gtk.TextView
-        +send_button: Gtk.Button
-        +attachment_button: Gtk.Button
-        +send_message()
-    }
-    
-    %% Data Models
-    class ChatModel {
-        +Gio.ListModel
-        +chats: GListModel
-        +create_chat()
-        +delete_chat()
-        +get_chat()
-    }
-    
-    class MessageModel {
-        +Gio.ListModel
-        +messages: GListModel
-        +add_message()
-        +clear_messages()
-    }
-    
-    class SettingsModel {
-        +Gio.Settings
-        +get_settings()
-        +save_settings()
-    }
-    
-    %% Integration
-    class AIClient {
-        +base_url: string
-        +api_key: string
-        +send_message()
-        +stream_response()
-    }
-    
-    class Database {
-        +sqlite3.Database
-        +init_schema()
-        +execute_query()
-    }
-    
-    %% Relationships
-    AI_Chat_Reader_App --> MainWindow
-    MainWindow --> HeaderBar
-    MainWindow --> Sidebar
-    MainWindow --> ChatView
-    MainWindow --> InputArea
-    
-    ChatView --> MessageBubble
-    
-    MainWindow --> ChatModel
-    MainWindow --> MessageModel
-    MainWindow --> SettingsModel
-    
-    AIClient --> Database
-    
-    %% Styles
-    classDef component fill:#e1f5fe,stroke:#0288d1,color:#01579b
-    classDef model fill:#e8f5e9,stroke:#388e3c,color:#1b5e20
-    classDef integration fill:#fff3e0,stroke:#f57c00,color:#e65100
-    
-    class AI_Chat_Reader_App component
-    class MainWindow component
-    class HeaderBar component
-    class Sidebar component
-    class ChatView component
-    class MessageBubble component
-    class InputArea component
-    
-    class ChatModel model
-    class MessageModel model
-    class SettingsModel model
-    
-    class AIClient integration
-    class Database integration
+    class AI_Chat_Reader_App
+    class MainWindow
+    class ConfigView
+    class LogView
+    class SettingsModel
+    class FileManager
+    class ProcessManager
+    class NotificationManager
+
+    AI_Chat_Reader_App --|> MainWindow
+    MainWindow -- ConfigView
+    MainWindow -- LogView
+    MainWindow -- SettingsModel
+    ConfigView -- FileManager
+    ConfigView -- ProcessManager
+    ProcessManager -- LogView
+    ProcessManager -- NotificationManager
+    ConfigView -- SettingsModel
