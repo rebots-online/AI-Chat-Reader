@@ -1,6 +1,8 @@
 const Gtk = imports.gi.Gtk;
 const Adw = imports.gi.Adw;
+const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
+const HeaderBar = imports.widgets.HeaderBar;
 const ConfigView = imports.widgets.ConfigView;
 const LogView = imports.widgets.LogView;
 const ProcessManager = imports.utils.ProcessManager;
@@ -9,21 +11,21 @@ const NotificationManager = imports.utils.NotificationManager;
 const MainWindow = GObject.registerClass(
     { GTypeName: 'MainWindow' },
     class MainWindow extends Adw.ApplicationWindow {
-        _init(args) {
+        _init(args = {}) {
             super._init(args);
 
+            this.set_title('AI Chat Reader');
+            this.set_default_size(800, 600);
 
+            // Header bar
+            this.set_titlebar(new HeaderBar());
 
-        this.set_title('AI Chat Reader');
-        this.set_default_size(800, 600);
-
-        // Main content area
-        let content = new Gtk.Box({
-            orientation: Gtk.Orientation.VERTICAL,
-            hexpand: true,
-            vexpand: true,
-        });
-        this.set_content(content);
+            let content = new Gtk.Box({
+                orientation: Gtk.Orientation.VERTICAL,
+                hexpand: true,
+                vexpand: true,
+            });
+            this.set_content(content);
 
         // Instantiate ConfigView and LogView
         this.configView = new ConfigView();
@@ -41,7 +43,11 @@ const MainWindow = GObject.registerClass(
             this.logView.append_log(`Options: ${JSON.stringify(params.options)}`);
 
             // Execute the script using ProcessManager
-            const scriptPath = '/path/to/your/conversion/script.py'; // TODO: Replace with actual script path
+            const scriptPath = GLib.build_filenamev([
+                GLib.get_current_dir(),
+                'scripts',
+                'convert_to_html.py'
+            ]);
             const scriptArgs = [
                 '--input', params.input_file,
                 '--output', params.output_directory,
@@ -79,10 +85,7 @@ const MainWindow = GObject.registerClass(
 
         log('MainWindow initialized.');
     }
-})
+});
 
-
-
-// Export the class for use in other files
-// This is implicitly handled by GObject.registerClass when assigning to a const
+var _MainWindow = MainWindow;
 

@@ -7,17 +7,15 @@ const FileManager = imports.utils.FileManager;     // Import FileManager
 const ConfigView = GObject.registerClass(
     { GTypeName: 'ConfigView', Signals: { 'execute-conversion': { param_types: [GObject.TYPE_JSOBJECT] } } },
     class ConfigView extends Gtk.Box {
-        _init(args) {
-            super._init(args);
-
-        super({
-            orientation: Gtk.Orientation.VERTICAL,
-            spacing: 10,
-            margin_top: 20,
-            margin_bottom: 20,
-            margin_start: 20,
-            margin_end: 20,
-        });
+        _init(args = {}) {
+            super._init(Object.assign({
+                orientation: Gtk.Orientation.VERTICAL,
+                spacing: 10,
+                margin_top: 20,
+                margin_bottom: 20,
+                margin_start: 20,
+                margin_end: 20,
+            }, args));
 
         this._settings = new SettingsModel(); // Instantiate SettingsModel
 
@@ -228,7 +226,5 @@ const ConfigView = GObject.registerClass(
     }
 }
 
-
-// Export the class for use in other files
-// This is implicitly handled by GObject.registerClass when assigning to a const
+var _ConfigView = ConfigView;
 
