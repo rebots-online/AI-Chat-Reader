@@ -150,6 +150,14 @@ Use `scripts/process_openai_delta.py` to append new conversations from a fresh O
 python scripts/process_openai_delta.py --input data/raw/openai_conversations.json
 ```
 
+### Incremental Processing for Anthropic
+
+Use `scripts/process_anthropic_delta.py` to append new Claude conversations without rebuilding previously generated HTML.
+
+```bash
+python scripts/process_anthropic_delta.py --input data/raw/example_claude_conversations.json
+```
+
 
 
 ## 📂 Repository Structure
