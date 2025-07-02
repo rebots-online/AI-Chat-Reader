@@ -107,6 +107,17 @@ classDiagram
     classDef model fill:#e8f5e9,stroke:#388e3c,color:#1b5e20
     classDef integration fill:#fff3e0,stroke:#f57c00,color:#e65100
     
-    class AI_Chat_Reader_App,MainWindow,HeaderBar,Sidebar,ChatView,MessageBubble,InputArea component
-    class ChatModel,MessageModel,SettingsModel model
-    class AIClient,Database integration
+    class AI_Chat_Reader_App component
+    class MainWindow component
+    class HeaderBar component
+    class Sidebar component
+    class ChatView component
+    class MessageBubble component
+    class InputArea component
+    
+    class ChatModel model
+    class MessageModel model
+    class SettingsModel model
+    
+    class AIClient integration
+    class Database integration
