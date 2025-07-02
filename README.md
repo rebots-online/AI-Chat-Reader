@@ -142,6 +142,15 @@ Use `scripts/export_conversations.py` to convert selected chats to PDF, DOCX, Ex
 python scripts/export_conversations.py --match "search text" --formats pdf,docx,md --output exports
 ```
 
+### Incremental Processing for OpenAI
+
+Use `scripts/process_openai_delta.py` to append new conversations from a fresh OpenAI export without regenerating existing HTML.
+
+```bash
+python scripts/process_openai_delta.py --input data/raw/openai_conversations.json
+```
+
+
 
 ## 📂 Repository Structure
 
