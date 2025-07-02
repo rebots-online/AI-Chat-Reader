@@ -185,4 +185,16 @@ All Rights Reserved
 
 ---
 
+## 📦 Building Packages
+
+Use `scripts/build_packages.sh` to create distributable packages. The script uses PyInstaller to generate a standalone binary, then builds a Debian package. If FUSE is available it will also produce an AppImage.
+
+```bash
+bash scripts/build_packages.sh
+```
+
+Packages are written to the `dist/` directory.
+
+---
+
 *Happy archiving!* 🎉
