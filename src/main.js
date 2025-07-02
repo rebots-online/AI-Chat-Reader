@@ -32,5 +32,5 @@ class Application extends Adw.Application {
 
 // Main application entry point
 application = new Application(); // Assign to global variable
+Adw.init();
 application.run(ARGV);
-app.run(ARGV);
