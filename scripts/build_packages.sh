@@ -1,13 +1,24 @@
 #!/bin/bash
 set -e
 
-# Build standalone binary with PyInstaller
-pyinstaller --onefile scripts/convert_to_html.py --name chat-archive-converter
+# Build standalone CLI binary with PyInstaller
+pyinstaller --onefile scripts/convert_to_html.py --name chat-archive-converter-cli
 
 # Prepare AppDir for AppImage
 APPDIR=dist/AppDir
 mkdir -p "$APPDIR/usr/bin"
-cp dist/chat-archive-converter "$APPDIR/usr/bin/"
+cp dist/chat-archive-converter-cli "$APPDIR/usr/bin/"
+# Install GNOME GUI wrapper
+cat > "$APPDIR/usr/bin/chat-archive-converter" <<'EOF'
+#!/bin/bash
+DIR="/usr/share/chat-archive-converter"
+cd "$DIR"
+exec gjs "$DIR/main.js" "$@"
+EOF
+chmod +x "$APPDIR/usr/bin/chat-archive-converter"
+# Copy GUI source
+mkdir -p "$APPDIR/usr/share/chat-archive-converter"
+cp -r src "$APPDIR/usr/share/chat-archive-converter/"
 mkdir -p "$APPDIR/usr/share/applications" "$APPDIR/usr/share/icons/hicolor/256x256/apps"
 cat > "$APPDIR/chat-archive-converter.desktop" <<EOD
 [Desktop Entry]
@@ -33,8 +44,10 @@ fi
 
 # Build DEB package
 DEB_DIR=dist/deb/chat-archive-converter
-mkdir -p "$DEB_DIR/DEBIAN" "$DEB_DIR/usr/bin"
-cp dist/chat-archive-converter "$DEB_DIR/usr/bin/"
+mkdir -p "$DEB_DIR/DEBIAN" "$DEB_DIR/usr/bin" "$DEB_DIR/usr/share/chat-archive-converter"
+cp dist/chat-archive-converter-cli "$DEB_DIR/usr/bin/"
+cp "$APPDIR/usr/bin/chat-archive-converter" "$DEB_DIR/usr/bin/"
+cp -r src "$DEB_DIR/usr/share/chat-archive-converter/"
 mkdir -p "$DEB_DIR/usr/share/applications" "$DEB_DIR/usr/share/icons/hicolor/256x256/apps"
 cp "$APPDIR/chat-archive-converter.desktop" "$DEB_DIR/usr/share/applications/"
 cp "$APPDIR/usr/share/icons/hicolor/256x256/apps/chat-archive-converter.png" "$DEB_DIR/usr/share/icons/hicolor/256x256/apps/"
