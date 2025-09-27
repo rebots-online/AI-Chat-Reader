@@ -13,7 +13,7 @@ cat > "$APPDIR/usr/bin/chat-archive-converter" <<'EOF'
 #!/bin/bash
 DIR="/usr/share/chat-archive-converter"
 cd "$DIR"
-exec gjs "$DIR/main.js" "$@"
+exec gjs "$DIR/src/main.js" "$@"
 EOF
 chmod +x "$APPDIR/usr/bin/chat-archive-converter"
 # Copy GUI source
