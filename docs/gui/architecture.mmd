@@ -1,0 +1,19 @@
+classDiagram
+    class AI_Chat_Reader_App
+    class MainWindow
+    class ConfigView
+    class LogView
+    class SettingsModel
+    class FileManager
+    class ProcessManager
+    class NotificationManager
+
+    AI_Chat_Reader_App --|> MainWindow
+    MainWindow -- ConfigView
+    MainWindow -- LogView
+    MainWindow -- SettingsModel
+    ConfigView -- FileManager
+    ConfigView -- ProcessManager
+    ProcessManager -- LogView
+    ProcessManager -- NotificationManager
+    ConfigView -- SettingsModel

@@ -169,6 +169,7 @@ class HTMLGenerator:
                     'title': conversation.title,
                     'filename': f"{source_subdir}/conversations/{filename}",
                     'source': conversation.source,
+                    'id': conversation.id,
                     'created_at': conversation.created_at,
                     'updated_at': conversation.updated_at,
                     'message_count': len(conversation.messages),

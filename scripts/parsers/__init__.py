@@ -1,1 +1,2 @@
-# HTML Chat Archive Converter - Parsers Module
+"""Parser package for Chat HTML Archive Converter."""
+

@@ -142,6 +142,23 @@ Use `scripts/export_conversations.py` to convert selected chats to PDF, DOCX, Ex
 python scripts/export_conversations.py --match "search text" --formats pdf,docx,md --output exports
 ```
 
+### Incremental Processing for OpenAI
+
+Use `scripts/process_openai_delta.py` to append new conversations from a fresh OpenAI export without regenerating existing HTML.
+
+```bash
+python scripts/process_openai_delta.py --input data/raw/openai_conversations.json
+```
+
+### Incremental Processing for Anthropic
+
+Use `scripts/process_anthropic_delta.py` to append new Claude conversations without rebuilding previously generated HTML.
+
+```bash
+python scripts/process_anthropic_delta.py --input data/raw/example_claude_conversations.json
+```
+
+
 
 ## 📂 Repository Structure
 
@@ -174,6 +191,7 @@ chat-html-generator/
 
 The optional module `scripts/revenuecat_client.py` provides a lightweight wrapper around the RevenueCat REST API for verifying lifetime and subscription purchases. Set `REVENUECAT_API_KEY` and call its methods within your automation.
 
+Additionally, `scripts/gumroad_client.py` allows verifying Gumroad license keys for one-off lifetime purchases or subscription sales. For pay-as-you-go Lightning payments, use `scripts/alby_client.py` which wraps the Alby API.
 ## 📝 License
 
 All Rights Reserved
@@ -181,6 +199,21 @@ All Rights Reserved
 
 * Inspired by [convert\_openai\_chats.py](#) and community feedback.
 * Built with ❤️ and pure Python.
+
+---
+
+## 📦 Building Packages
+
+Use `scripts/build_packages.sh` to create distributable packages. The script uses
+PyInstaller to generate a standalone binary, then builds a Debian package that
+installs a desktop entry so the app appears in the GNOME menu. If FUSE is
+available it will also produce an AppImage.
+
+```bash
+bash scripts/build_packages.sh
+```
+
+Packages are written to the `dist/` directory.
 
 ---
 

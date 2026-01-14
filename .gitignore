@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 *.html
+!scripts/templates/*.html
 .Python
 env/
 data/html/
@@ -48,3 +49,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+# Node
+node_modules/
+dist/
