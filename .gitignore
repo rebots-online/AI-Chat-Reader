@@ -17,6 +17,9 @@ lib/
 lib64/
 parts/
 sdist/
+venv/
+.plandex-v2/
+__pycache__/
 var/
 *.egg-info/
 .installed.cfg
