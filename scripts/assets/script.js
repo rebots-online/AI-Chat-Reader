@@ -80,42 +80,6 @@ function handleSearch() {
     updateConversationsList();
 }
 
-function clearSearch() {
-    const searchInput = document.getElementById('search-input');
-    const clearButton = document.getElementById('clear-search');
-    
-    searchInput.value = '';
-    if (clearButton) {
-        clearButton.style.display = 'none';
-        clearButton.addEventListener('click', clearSearch);
-    }
-}
-
-function handleSearch() {
-    const searchInput = document.getElementById('search-input');
-    const clearButton = document.getElementById('clear-search');
-    const query = searchInput.value.toLowerCase().trim();
-    
-    // Show/hide clear button
-    if (clearButton) {
-        clearButton.style.display = query ? 'flex' : 'none';
-    }
-    
-    // Filter conversations
-    if (query) {
-        filteredConversations = conversationsData.filter(conv => {
-            return conv.title.toLowerCase().includes(query) ||
-                   conv.preview?.toLowerCase().includes(query) ||
-                   conv.source.toLowerCase().includes(query);
-        });
-    } else {
-        filteredConversations = [...conversationsData];
-    }
-    
-    // Apply other filters
-    applyFilters();
-    updateConversationsList();
-}
 
 function clearSearch() {
     const searchInput = document.getElementById('search-input');

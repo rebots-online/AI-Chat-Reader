@@ -1,3 +1,4 @@
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """Simple Gumroad API helper."""
 import os
 import requests

@@ -1,9 +1,13 @@
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """
 Parser for OpenAI/ChatGPT chat archive JSON files.
 """
 import json
+import logging
 from typing import List, Dict, Any
 from .base_parser import BaseParser, Conversation, Message
+
+logger = logging.getLogger(__name__)
 
 
 class OpenAIParser(BaseParser):
@@ -25,21 +29,28 @@ class OpenAIParser(BaseParser):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            
+
             conversations = []
             for conv_data in data:
                 try:
                     conversation = self._parse_conversation(conv_data)
                     if conversation and conversation.messages:
                         conversations.append(conversation)
-                except Exception as e:
-                    print(f"Warning: Failed to parse conversation {conv_data.get('title', 'unknown')}: {e}")
+                except (KeyError, ValueError, AttributeError, TypeError) as e:
+                    conv_title = conv_data.get('title', 'unknown') if isinstance(conv_data, dict) else 'invalid'
+                    logger.warning("Failed to parse conversation '%s': %s", conv_title, e)
                     continue
-            
+
             return conversations
-            
+
+        except (FileNotFoundError, PermissionError) as e:
+            logger.error("Cannot access OpenAI file '%s': %s", file_path, e)
+            return []
+        except (json.JSONDecodeError, ValueError) as e:
+            logger.error("Invalid JSON in OpenAI file '%s': %s", file_path, e)
+            return []
         except Exception as e:
-            print(f"Error reading OpenAI file {file_path}: {e}")
+            logger.error("Unexpected error reading OpenAI file '%s': %s", file_path, e)
             return []
     
     def _parse_conversation(self, conv_data: Dict[str, Any]) -> Conversation:
@@ -158,8 +169,8 @@ class OpenAIParser(BaseParser):
                 uuid=msg_id
             )
             
-        except Exception as e:
-            print(f"Warning: Failed to parse OpenAI message: {e}")
+        except (KeyError, ValueError, AttributeError, TypeError) as e:
+            logger.debug("Failed to parse OpenAI message: %s", e)
             return None
     
     def _extract_content(self, content_obj: Dict[str, Any]) -> str:

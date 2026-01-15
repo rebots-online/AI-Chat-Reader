@@ -1,9 +1,13 @@
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """
 Parser for Anthropic/Claude chat archive JSON files.
 """
 import json
+import logging
 from typing import List, Dict, Any
 from .base_parser import BaseParser, Conversation, Message
+
+logger = logging.getLogger(__name__)
 
 
 class AnthropicParser(BaseParser):
@@ -25,21 +29,28 @@ class AnthropicParser(BaseParser):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            
+
             conversations = []
             for conv_data in data:
                 try:
                     conversation = self._parse_conversation(conv_data)
                     if conversation and conversation.messages:
                         conversations.append(conversation)
-                except Exception as e:
-                    print(f"Warning: Failed to parse conversation {conv_data.get('uuid', 'unknown')}: {e}")
+                except (KeyError, ValueError, AttributeError, TypeError) as e:
+                    conv_uuid = conv_data.get('uuid', 'unknown') if isinstance(conv_data, dict) else 'invalid'
+                    logger.warning("Failed to parse conversation '%s': %s", conv_uuid, e)
                     continue
-            
+
             return conversations
-            
+
+        except (FileNotFoundError, PermissionError) as e:
+            logger.error("Cannot access Anthropic file '%s': %s", file_path, e)
+            return []
+        except (json.JSONDecodeError, ValueError) as e:
+            logger.error("Invalid JSON in Anthropic file '%s': %s", file_path, e)
+            return []
         except Exception as e:
-            print(f"Error reading Anthropic file {file_path}: {e}")
+            logger.error("Unexpected error reading Anthropic file '%s': %s", file_path, e)
             return []
     
     def _parse_conversation(self, conv_data: Dict[str, Any]) -> Conversation:
@@ -129,6 +140,6 @@ class AnthropicParser(BaseParser):
             
             return message
             
-        except Exception as e:
-            print(f"Warning: Failed to parse message: {e}")
+        except (KeyError, ValueError, AttributeError, TypeError) as e:
+            logger.debug("Failed to parse message: %s", e)
             return None

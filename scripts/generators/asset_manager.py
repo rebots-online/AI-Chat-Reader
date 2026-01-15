@@ -1,3 +1,4 @@
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """
 Asset manager for copying CSS, JS, and other static files.
 """

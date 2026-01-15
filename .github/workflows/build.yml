@@ -1,0 +1,145 @@
+name: Build Release Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller
+          pip install -r requirements.txt
+
+      - name: Build CLI binary
+        run: pyinstaller scripts/cli.spec
+
+      - name: Build .deb package
+        run: python scripts/build.py
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: dist/*
+          retention-days: 30
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller
+          pip install -r requirements.txt
+
+      - name: Build Windows .exe
+        shell: pwsh
+        run: |
+          $version = Get-Content VERSION
+          $epoch = [int](Get-Date -UFormat %s)
+          $buildNum = ($epoch % 100) * 1000 + ($epoch / 60) % 60
+          $fullVersion = "v${version}-build-${buildNum}"
+
+          pyinstaller `
+            --onefile `
+            --name "chat-archive-converter-${fullVersion}" `
+            --add-data "VERSION:." `
+            --hidden-import jinja2 `
+            --hidden-import markdown `
+            --hidden-import PIL `
+            --collect-all jinja2 `
+            scripts/convert_to_html.py
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-packages
+          path: dist/*.exe
+          retention-days: 30
+
+  build-windows-msi:
+    needs: build-windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-packages
+
+      # Requires WiX Toolset for MSI creation
+      # This is a simplified example - full MSI build needs more setup
+      - name: Create MSI installer (placeholder)
+        shell: pwsh
+        run: |
+          Write-Host "MSI build requires additional WiX setup"
+          Write-Host "Consider using NSIS or InnoSetup instead"
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install pyinstaller
+          pip install -r requirements.txt
+
+      - name: Build macOS .app
+        run: pyinstaller scripts/cli.spec --windowed --onefile
+
+      - name: Create DMG (placeholder)
+        run: echo "DMG creation requires additional setup"
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-packages
+          path: dist/*
+          retention-days: 30
+
+  release:
+    needs: [build-linux, build-windows]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            linux-packages/*
+            windows-packages/*
+            macos-packages/*
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """
 HTML Chat Archive Converter - Main Script
 
@@ -469,8 +470,43 @@ class ChatArchiveConverter:
             return False
 
 
+def print_version_banner():
+    """
+    Print version and copyright banner as FIRST step of initialization.
+
+    Windsurf Rule: Copyright must be displayed on all console/terminal apps
+    as a first step loading and initializing, so it displays regardless of
+    successful execution and initialization or not.
+    """
+    import time
+
+    # Read version from VERSION file
+    version_file = Path(__file__).parent.parent / "VERSION"
+    try:
+        version = version_file.read_text().strip() if version_file.exists() else "unknown"
+    except Exception:
+        version = "unknown"
+
+    # Generate build number: (epoch % 100) * 1000 + minutes_past_hour
+    epoch = int(time.time())
+    epoch_mod = epoch % 100
+    minutes = (epoch // 60) % 60
+    build_num = epoch_mod * 1000 + minutes
+
+    # Print banner - this MUST be the first output
+    print("=" * 70)
+    print(f"AI Chat Reader v{version} Build {build_num}")
+    print("Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.")
+    print("=" * 70)
+    print()
+
+
 def main():
     """Main entry point."""
+    # CRITICAL: Print version/banner FIRST before any other operations
+    # This ensures copyright is always displayed, even if imports fail
+    print_version_banner()
+
     parser = argparse.ArgumentParser(description="Convert chat archives to HTML and optionally GIFs/PDFs/PNGs/SVGs.")
     parser.add_argument('--gif', action='store_true', help='Generate animated GIF for each conversation')
     parser.add_argument('--pdf', action='store_true', help='Generate PDF for each conversation')

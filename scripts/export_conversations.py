@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """CLI tool to export conversations to various formats."""
 import os
 import argparse

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """Incrementally process new OpenAI conversations without rebuilding existing output."""
 import os
 import json

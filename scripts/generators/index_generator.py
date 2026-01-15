@@ -1,3 +1,4 @@
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
 """
 Index page generator for chat archive navigation.
 """
