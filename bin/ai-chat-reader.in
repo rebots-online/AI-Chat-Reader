@@ -1,0 +1,8 @@
+#!/bin/bash
+# Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
+# AI Chat Reader GNOME application launcher
+
+export GI_TYPELIB_PATH="@PKGDATADIR@:$GI_TYPELIB_PATH"
+export GSETTINGS_SCHEMA_DIR="@PKGDATADIR@/../glib-2.0/schemas:$GSETTINGS_SCHEMA_DIR"
+
+exec @GJS@ -m @PKGDATADIR@/src/main.js "$@"

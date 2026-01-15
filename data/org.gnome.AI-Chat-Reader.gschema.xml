@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (C) 2025 Robin L. M. Cheung, MBA. All rights reserved.
+  GSettings schema for AI Chat Reader GNOME application
+-->
+<schemalist gettext-domain="ai-chat-reader">
+  <schema id="org.gnome.AI-Chat-Reader" path="/org/gnome/AI-Chat-Reader/">
+    <key name="input-file-path" type="s">
+      <default>''</default>
+      <summary>Input File Path</summary>
+      <description>Path to the last selected chat export file (OpenAI or Anthropic JSON)</description>
+    </key>
+    <key name="output-directory-path" type="s">
+      <default>''</default>
+      <summary>Output Directory Path</summary>
+      <description>Path to the directory where converted files are saved</description>
+    </key>
+    <key name="conversion-options" type="s">
+      <default>'{}'</default>
+      <summary>Conversion Options</summary>
+      <description>JSON string containing conversion options (strip_metadata, include_attachments, max_tokens_per_message, output_format)</description>
+    </key>
+    <key name="window-width" type="i">
+      <default>800</default>
+      <summary>Window Width</summary>
+      <description>Width of the main application window</description>
+    </key>
+    <key name="window-height" type="i">
+      <default>600</default>
+      <summary>Window Height</summary>
+      <description>Height of the main application window</description>
+    </key>
+    <key name="window-maximized" type="b">
+      <default>false</default>
+      <summary>Window Maximized</summary>
+      <description>Whether the main window is maximized</description>
+    </key>
+  </schema>
+</schemalist>

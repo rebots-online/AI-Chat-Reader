@@ -1,8 +1,8 @@
 const Gtk = imports.gi.Gtk;
 const Adw = imports.gi.Adw;
 const GObject = imports.gi.GObject;
-const SettingsModel = imports.models.SettingsModel; // Import SettingsModel
-const FileManager = imports.utils.FileManager;     // Import FileManager
+const SettingsModel = imports.models.SettingsModel._SettingsModel;
+const FileManager = imports.utils.FileManager._FileManager;
 
 const ConfigView = GObject.registerClass(
     { GTypeName: 'ConfigView', Signals: { 'execute-conversion': { param_types: [GObject.TYPE_JSOBJECT] } } },
@@ -224,8 +224,7 @@ const ConfigView = GObject.registerClass(
 
         log('ConfigView initialized.');
     }
-}
+});
 
 var _ConfigView = ConfigView;
-);
 

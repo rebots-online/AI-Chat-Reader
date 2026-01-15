@@ -98,14 +98,23 @@ Each item specifies required components, filenames, dependencies, and intended o
 ## 5. Build and Packaging
 
 ### 5.1 Meson Build System
-- [ ] Update `meson.build` and `meson_options.txt`.
+- [X] Update `meson.build` and `meson_options.txt`.
   - Configure for new source files and structure.
   - Ensure correct installation paths.
 
 ### 5.2 GSchema Compilation
-- [ ] Ensure `gschema.xml` is compiled during build process.
+- [X] Ensure `gschema.xml` is compiled during build process.
+  - Created `data/org.gnome.AI-Chat-Reader.gschema.xml`
 
-### 5.3 Flatpak Packaging
+### 5.3 .deb Package
+- [X] Build GNOME app as .deb package via `scripts/build.py`
+  - Output: `dist/ai-chat-reader-gnome-{version}-{build}-all.deb`
+
+### 5.4 AppImage Package
+- [X] Build GNOME app as AppImage via `scripts/build.py`
+  - Output: `dist/AI-Chat-Reader-{version}-{build}-x86_64.AppImage`
+
+### 5.5 Flatpak Packaging
 - [ ] Update `flatpak/org.gnome.AI-Chat-Reader.yaml`.
   - Reflect new file structure and dependencies.
 

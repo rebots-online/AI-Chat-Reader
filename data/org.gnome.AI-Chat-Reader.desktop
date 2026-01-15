@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=AI Chat Reader
+Comment=Convert OpenAI and Anthropic chat exports to HTML
+Exec=ai-chat-reader
+Icon=org.gnome.AI-Chat-Reader
+Terminal=false
+Type=Application
+Categories=Utility;GTK;GNOME;
+Keywords=chat;converter;openai;anthropic;html;export;
+StartupNotify=true
+StartupWMClass=org.gnome.AI-Chat-Reader
+X-GNOME-UsesNotifications=true

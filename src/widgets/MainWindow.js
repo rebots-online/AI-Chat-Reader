@@ -2,11 +2,11 @@ const Gtk = imports.gi.Gtk;
 const Adw = imports.gi.Adw;
 const GLib = imports.gi.GLib;
 const GObject = imports.gi.GObject;
-const HeaderBar = imports.widgets.HeaderBar;
-const ConfigView = imports.widgets.ConfigView;
-const LogView = imports.widgets.LogView;
-const ProcessManager = imports.utils.ProcessManager;
-const NotificationManager = imports.utils.NotificationManager;
+const HeaderBar = imports.widgets.HeaderBar._HeaderBar;
+const ConfigView = imports.widgets.ConfigView._ConfigView;
+const LogView = imports.widgets.LogView._LogView;
+const ProcessManager = imports.utils.ProcessManager._ProcessManager;
+const NotificationManager = imports.utils.NotificationManager._NotificationManager;
 
 const MainWindow = GObject.registerClass(
     { GTypeName: 'MainWindow' },
@@ -17,19 +17,24 @@ const MainWindow = GObject.registerClass(
             this.set_title('AI Chat Reader');
             this.set_default_size(800, 600);
 
-            // Header bar
-            this.set_titlebar(new HeaderBar());
+            // Use Adw.ToolbarView for proper libadwaita layout
+            const toolbarView = new Adw.ToolbarView();
+            this.set_content(toolbarView);
 
+            // Add header bar at top
+            toolbarView.add_top_bar(new HeaderBar());
+
+            // Main content box
             let content = new Gtk.Box({
                 orientation: Gtk.Orientation.VERTICAL,
                 hexpand: true,
                 vexpand: true,
             });
-            this.set_content(content);
+            toolbarView.set_content(content);
 
-        // Instantiate ConfigView and LogView
-        this.configView = new ConfigView();
-        this.logView = new LogView();
+            // Instantiate ConfigView and LogView
+            this.configView = new ConfigView();
+            this.logView = new LogView();
 
         // Add ConfigView and LogView to the content area
         content.append(this.configView);
