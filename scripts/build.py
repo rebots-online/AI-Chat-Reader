@@ -68,7 +68,7 @@ def build_cli_binary():
     pyinstaller_cmd = [
         "pyinstaller",
         "--onefile",
-        "--name", f"chat-archive-converter-{version_str.replace(' ', '-').lower()}",
+        "--name", f"chat-archive-converter-v{get_version()}-build-{build_num}",
         "--add-data", f"VERSION:.",
         "--hidden-import", "jinja2",
         "--hidden-import", "markdown",
@@ -92,8 +92,8 @@ def build_deb_package():
 
     version_str, build_num = get_full_version()
 
-    # Get the binary name
-    binary_name = f"chat-archive-converter-{version_str.replace(' ', '-').lower()}"
+    # Get the binary name (must match PyInstaller output)
+    binary_name = f"chat-archive-converter-v{get_version()}-build-{build_num}"
 
     # Create DEB directory structure
     deb_dir = Path("dist/deb/chat-archive-converter")
@@ -126,7 +126,7 @@ Description: Offline chat archive converter to HTML and other formats
     subprocess.run(["chmod", "-R", "0755", str(deb_dir / "DEBIAN")], check=True)
 
     # Build deb package
-    deb_output = Path("dist") / f"chat-archive-converter-{get_version()}-amd64.deb"
+    deb_output = Path("dist") / f"chat-archive-converter-v{get_version()}-build-{build_num}-amd64.deb"
     subprocess.run(["dpkg-deb", "--build", str(deb_dir), str(deb_output)], check=True)
 
     print(f"✅ .deb package built: {deb_output}")
@@ -176,6 +176,9 @@ def build_gnome_app_deb():
     # Copy Python scripts
     shutil.copytree(project_root / "scripts", deb_dir / "usr/share/ai-chat-reader/scripts",
                     dirs_exist_ok=True, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', 'build.py'))
+
+    # Copy VERSION file
+    shutil.copy(project_root / "VERSION", deb_dir / "usr/share/ai-chat-reader/")
 
     # Copy desktop file and icon
     shutil.copy(project_root / "data/org.gnome.AI-Chat-Reader.desktop",
@@ -230,7 +233,7 @@ update-desktop-database /usr/share/applications || true
     subprocess.run(["chmod", "-R", "0755", str(deb_dir / "DEBIAN")], check=True)
 
     # Build deb package
-    deb_output = Path("dist") / f"ai-chat-reader-gnome-{version}-{build_num}-all.deb"
+    deb_output = Path("dist") / f"ai-chat-reader-gnome-v{version}-build-{build_num}-all.deb"
     subprocess.run(["dpkg-deb", "--build", str(deb_dir), str(deb_output)], check=True)
 
     print(f"✅ GNOME .deb package built: {deb_output}")
@@ -300,6 +303,9 @@ def build_appimage():
     shutil.copytree(project_root / "scripts", appdir / "usr/share/ai-chat-reader/scripts",
                     dirs_exist_ok=True, ignore=shutil.ignore_patterns('__pycache__', '*.pyc', 'build.py'))
 
+    # Copy VERSION file
+    shutil.copy(project_root / "VERSION", appdir / "usr/share/ai-chat-reader/")
+
     # Copy desktop file and icon
     shutil.copy(project_root / "data/org.gnome.AI-Chat-Reader.desktop",
                 appdir / "usr/share/applications/")
@@ -347,7 +353,7 @@ exec gjs -m "$HERE/usr/share/ai-chat-reader/src/main.js" "$@"
         print(f"⚠️  Could not compile schemas: {e}")
 
     # Build AppImage
-    appimage_output = Path("dist") / f"AI-Chat-Reader-{version}-{build_num}-x86_64.AppImage"
+    appimage_output = Path("dist") / f"AI-Chat-Reader-v{version}-build-{build_num}-x86_64.AppImage"
     try:
         env = os.environ.copy()
         env["ARCH"] = "x86_64"

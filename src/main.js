@@ -18,9 +18,33 @@ imports.searchPath.unshift(GLib.get_current_dir() + '/src');
 
 const MainWindow = imports.widgets.MainWindow;
 
-// Version and build number
-const VERSION = '1.0.0';
-const BUILD_NUM = Math.floor((Date.now() / 1000) % 100) * 1000 + Math.floor((Date.now() / 1000 / 60) % 60);
+// Read version from VERSION file
+function getVersion() {
+    const versionPaths = [
+        GLib.build_filenamev([pkgdatadir, '..', 'VERSION']),
+        GLib.build_filenamev([GLib.get_current_dir(), 'VERSION']),
+        '/usr/share/ai-chat-reader/VERSION',
+    ];
+    for (const path of versionPaths) {
+        try {
+            const [ok, contents] = GLib.file_get_contents(path);
+            if (ok) return new TextDecoder().decode(contents).trim();
+        } catch (e) { /* continue */ }
+    }
+    return '1.0.0';
+}
+
+// Generate build number using same algorithm as build.py
+// epoch % 100 * 1000 + (epoch / 60) % 60
+function generateBuildNumber() {
+    const epoch = Math.floor(Date.now() / 1000);
+    const epochMod = epoch % 100;
+    const minutes = Math.floor(epoch / 60) % 60;
+    return epochMod * 1000 + minutes;
+}
+
+const VERSION = getVersion();
+const BUILD_NUM = generateBuildNumber();
 
 // Global variable to hold the application instance
 // This is necessary for NotificationManager to access the application object
